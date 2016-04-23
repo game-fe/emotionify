@@ -1,6 +1,6 @@
 {
   "name": "emotionfy",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "common emotion service ",
   "main": "./dist/emotionfyFactory.js",
   "scripts": {
