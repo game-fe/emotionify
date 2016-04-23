@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Emotionify Demo</title>
+</head>
+<body>
+
+<script src="../dist/emotionfyFactory.js"></script>
+<script type="text/javascript">
+        var emotionify = emotionifyFactory();
+
+        var str1 = "#$face_01$#哈哈/::)&#x1F600;";
+        var newStr1 = emotionify.parse2Img(str1);
+        document.write('<h1>【显示】编码到图片</h1>');
+        document.write(str1);
+        document.write('<br/>');
+        document.write(newStr1);
+
+
+        var str2 = "[宝宝方了][口水][微笑]";
+        var newStr2 = emotionify.parse2Code(str2);
+        document.write('<h1>【传输】中文到编码</h1>');
+        document.write(str2);
+        document.write('<br/>');
+        document.write(newStr2);
+
+</script>
+</body>
+</html>

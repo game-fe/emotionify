@@ -1,0 +1,28 @@
+{
+  "name": "emotionify",
+  "version": "1.0.0",
+  "description": "common emotion service ",
+  "main": "./dist/emotionfyFactory.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "emotion",
+    "emoji"
+  ],
+  "author": "devindo <dysecho@gmail.com> (http://github.com/devindo)",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.12.3",
+    "browserify": "^13.0.0",
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.2.2",
+    "mocha": "^2.4.5",
+    "vinyl-source-stream": "^1.1.0"
+  },
+  "dependencies": {
+    "browserify": "^13.0.0",
+    "object-assign": "^4.0.1",
+    "web-detector": "^2.4.7"
+  }
+}
