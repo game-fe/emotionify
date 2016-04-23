@@ -10,6 +10,10 @@
     "emotion",
     "emoji"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/game-fe/emotionfy.git"
+  },
   "author": "game-fe (https://github.com/game-fe)",
   "license": "ISC",
   "devDependencies": {
@@ -19,6 +23,9 @@
     "gulp-rename": "^1.2.2",
     "mocha": "^2.4.5",
     "vinyl-source-stream": "^1.1.0"
+  },
+  "bugs": {
+    "url": "https://github.com/game-fe/emotionfy/issues"
   },
   "dependencies": {
     "object-assign": "^4.0.1",
