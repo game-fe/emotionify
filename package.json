@@ -31,6 +31,6 @@
   },
   "dependencies": {
     "object-assign": "^4.0.1",
-    "web-detector": "^2.4.8"
+    "web-detector": "^2.4.9"
   }
 }

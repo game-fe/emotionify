@@ -15,7 +15,7 @@ var _support = {
     },
     'windows': {
         'edge': '10',
-        'ie': '7',
+        'ie': '9',
         'Firefox': '7'
     },
     'ios': {
