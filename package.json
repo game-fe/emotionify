@@ -1,5 +1,5 @@
 {
-  "name": "emotionify",
+  "name": "emotionfy",
   "version": "1.0.0",
   "description": "common emotion service ",
   "main": "./dist/emotionfyFactory.js",
@@ -10,7 +10,7 @@
     "emotion",
     "emoji"
   ],
-  "author": "devindo <dysecho@gmail.com> (http://github.com/devindo)",
+  "author": "game-fe (https://github.com/game-fe)",
   "license": "ISC",
   "devDependencies": {
     "browser-sync": "^2.12.3",
@@ -21,7 +21,6 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
-    "browserify": "^13.0.0",
     "object-assign": "^4.0.1",
     "web-detector": "^2.4.7"
   }
