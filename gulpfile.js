@@ -16,7 +16,7 @@ gulp.task('watch',function(){
     gulp.watch('./src/*.js',['clean','build']);
 });
 
-gulp.task('build',function(){
+gulp.task('build', ['clean'], function(){
     return bundler.transform("babelify", {
         presets: ['es2015']
     })
