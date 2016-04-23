@@ -59,7 +59,7 @@ Emotionfy.prototype ={
                 keyIndex = info[1];
             var emotionKey = emotionKeys[keyIndex],
                 emotion = emotionMap[emotionKey],
-                replace = '<img src="' + emotion.pics['big'] + '" alt="' emotion.name + '" title="' + emotion.name + '">';
+                replace = '<img src="' + emotion.pics['big'] + '" alt="' + emotion.name + '" title="' + emotion.name + '">';
             // 判断是否是系统表情，以及是否支持该系统表情
             if((/&#x1F[0-9]{3};/i).test(emotion['code'])){
                 if(isSupport()){
