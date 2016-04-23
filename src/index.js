@@ -48,11 +48,20 @@ Emotionfy.prototype ={
     },
 
     parse2Img:function(str){
-        console.log(str);
+        var ranges = [
+          '\ud83c[\udf00-\udfff]', // U+1F300 to U+1F3FF
+          '\ud83d[\udc00-\ude4f]', // U+1F400 to U+1F64F
+          '\ud83d[\ude80-\udeff]'  // U+1F680 to U+1F6FF
+        ];
+        var str = str.replace(new RegExp(ranges.join('|'), 'g'), function(code){
+            return '&#x' + toCodePoint(code).toUpperCase() + ';';
+        });
+
         var _this = this,
             infos = _this._trie.search(str),
             emotionKeys = _this._formattedEmotions.keys,
             emotionMap = _this._formattedEmotions.maps;
+
         for(var i = infos.length-1; i >= 0 ; i--){
             var info = infos[i],
                 pos = info[0],
@@ -107,6 +116,26 @@ function formatEmotions(emotions){
         maps:emotionMap,
         zhMaps:emotionZhMap
     };
+}
+
+function toCodePoint(unicodeSurrogates, sep) {
+    var
+      r = [],
+      c = 0,
+      p = 0,
+      i = 0;
+    while (i < unicodeSurrogates.length) {
+      c = unicodeSurrogates.charCodeAt(i++);
+      if (p) {
+        r.push((0x10000 + ((p - 0xD800) << 10) + (c - 0xDC00)).toString(16));
+        p = 0;
+      } else if (0xD800 <= c && c <= 0xDBFF) {
+        p = c;
+      } else {
+        r.push(c.toString(16));
+      }
+    }
+    return r.join(sep || '-');
 }
 
 function emotionfyFactory(){
