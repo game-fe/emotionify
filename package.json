@@ -17,6 +17,8 @@
   "author": "game-fe (https://github.com/game-fe)",
   "license": "ISC",
   "devDependencies": {
+    "babel-preset-es2015": "^6.6.0",
+    "babelify": "^7.2.0",
     "browser-sync": "^2.12.3",
     "browserify": "^13.0.0",
     "gulp": "^3.9.1",
@@ -29,6 +31,6 @@
   },
   "dependencies": {
     "object-assign": "^4.0.1",
-    "web-detector": "^2.4.7"
+    "web-detector": "^2.4.8"
   }
 }

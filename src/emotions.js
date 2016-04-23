@@ -189,6 +189,19 @@ module.exports ={
                 name: '[露齿而笑]',
                 code: '&#x1F600;'
             },
+
+            // test
+            {
+                pics: {
+                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f600.png',
+                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f600.png',
+                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f600.png'
+                },
+                name: '[露而笑]',
+                code: '&#x1F600;'
+            },
+            // test
+
             {
                 pics: {
                     big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f637.png',

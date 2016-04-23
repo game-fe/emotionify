@@ -247,8 +247,8 @@ module.exports = Detector;
 },{}],3:[function(require,module,exports){
 "use strict";
 
-const Detector = require("./detector");
-const WebRules = require("./web-rules");
+const Detector = require("./detector.js");
+const WebRules = require("./web-rules.js");
 
 const userAgent = navigator.userAgent || "";
 //const platform = navigator.platform || "";
@@ -352,7 +352,7 @@ const Tan = WebParse(ua);
 Tan.parse = WebParse;
 module.exports = Tan;
 
-},{"./detector":2,"./web-rules":4}],4:[function(require,module,exports){
+},{"./detector.js":2,"./web-rules.js":4}],4:[function(require,module,exports){
 (function (global){
 "use strict";
 
@@ -689,608 +689,564 @@ module.exports = {
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],5:[function(require,module,exports){
-module.exports ={
-    "qq":{
-        "name":"QQ表情包",
-        "data":[
-            {
-                "code":"/::)",
-                "name":"[微笑]",
-                "pics":{
-                    "big":"https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/0.gif",
-                    "medium":"https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/0.gif"
-                }
-            },
-            {
-                "code":"/::~",
-                "name":"[瘪嘴]",
-                "pics":{
-                    "big":"https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/1.gif",
-                    "medium":"https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/1.gif"
-                }
-            },
-            {
-                "code":"/::B",
-                "name":"[口水]",
-                "pics":{
-                    "big":"https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/2.gif",
-                    "medium":"https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/2.gif"
-                }
+"use strict";
+
+module.exports = {
+    "qq": {
+        "name": "QQ表情包",
+        "data": [{
+            "code": "/::)",
+            "name": "[微笑]",
+            "pics": {
+                "big": "https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/0.gif",
+                "medium": "https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/0.gif"
             }
-        ]
+        }, {
+            "code": "/::~",
+            "name": "[瘪嘴]",
+            "pics": {
+                "big": "https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/1.gif",
+                "medium": "https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/1.gif"
+            }
+        }, {
+            "code": "/::B",
+            "name": "[口水]",
+            "pics": {
+                "big": "https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/2.gif",
+                "medium": "https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/2.gif"
+            }
+        }]
     },
     'wukong': {
         name: '悟空表情包',
-        data: [
-            {
-                pics: {
-                    big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_01.png',
-                    medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_01.png',
-                    small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_01.png'
-                },
-                name: '[主播好美]',
-                code: '#$face_01$#'
+        data: [{
+            pics: {
+                big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_01.png',
+                medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_01.png',
+                small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_01.png'
             },
-            {
-                pics: {
-                    big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_02.png',
-                    medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_02.png',
-                    small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_02.png'
-                },
-                name: '[圆傻白甜]',
-                code: '#$face_02$#'
+            name: '[主播好美]',
+            code: '#$face_01$#'
+        }, {
+            pics: {
+                big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_02.png',
+                medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_02.png',
+                small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_02.png'
             },
-            {
-                pics: {
-                    big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_03.png',
-                    medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_03.png',
-                    small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_03.png'
-                },
-                name: '[跪求抱抱]',
-                code: '#$face_03$#'
+            name: '[圆傻白甜]',
+            code: '#$face_02$#'
+        }, {
+            pics: {
+                big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_03.png',
+                medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_03.png',
+                small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_03.png'
             },
-            {
-                pics: {
-                    big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_04.png',
-                    medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_04.png',
-                    small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_04.png'
-                },
-                name: '[得意的笑]',
-                code: '#$face_04$#'
+            name: '[跪求抱抱]',
+            code: '#$face_03$#'
+        }, {
+            pics: {
+                big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_04.png',
+                medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_04.png',
+                small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_04.png'
             },
-            {
-                pics: {
-                    big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_05.png',
-                    medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_05.png',
-                    small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_05.png'
-                },
-                name: '[静看装逼]',
-                code: '#$face_05$#'
+            name: '[得意的笑]',
+            code: '#$face_04$#'
+        }, {
+            pics: {
+                big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_05.png',
+                medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_05.png',
+                small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_05.png'
             },
-            {
-                pics: {
-                    big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_06.png',
-                    medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_06.png',
-                    small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_06.png'
-                },
-                name: '[诸葛如花]',
-                code: '#$face_06$#'
+            name: '[静看装逼]',
+            code: '#$face_05$#'
+        }, {
+            pics: {
+                big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_06.png',
+                medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_06.png',
+                small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_06.png'
             },
-            {
-                pics: {
-                    big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_07.png',
-                    medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_07.png',
-                    small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_07.png'
-                },
-                name: '[恶有恶报]',
-                code: '#$face_07$#'
+            name: '[诸葛如花]',
+            code: '#$face_06$#'
+        }, {
+            pics: {
+                big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_07.png',
+                medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_07.png',
+                small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_07.png'
             },
-            {
-                pics: {
-                    big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_08.png',
-                    medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_08.png',
-                    small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_08.png'
-                },
-                name: '[污力涛涛]',
-                code: '#$face_08$#'
+            name: '[恶有恶报]',
+            code: '#$face_07$#'
+        }, {
+            pics: {
+                big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_08.png',
+                medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_08.png',
+                small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_08.png'
             },
-            {
-                pics: {
-                    big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_09.png',
-                    medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_09.png',
-                    small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_09.png'
-                },
-                name: '[有钱任性]',
-                code: '#$face_09$#'
+            name: '[污力涛涛]',
+            code: '#$face_08$#'
+        }, {
+            pics: {
+                big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_09.png',
+                medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_09.png',
+                small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_09.png'
             },
-            {
-                pics: {
-                    big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_10.png',
-                    medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_10.png',
-                    small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_10.png'
-                },
-                name: '[吓着宝宝]',
-                code: '#$face_10$#'
+            name: '[有钱任性]',
+            code: '#$face_09$#'
+        }, {
+            pics: {
+                big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_10.png',
+                medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_10.png',
+                small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_10.png'
             },
-            {
-                pics: {
-                    big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_11.png',
-                    medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_11.png',
-                    small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_11.png'
-                },
-                name: '[媚邪狂狷]',
-                code: '#$face_11$#'
+            name: '[吓着宝宝]',
+            code: '#$face_10$#'
+        }, {
+            pics: {
+                big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_11.png',
+                medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_11.png',
+                small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_11.png'
             },
-            {
-                pics: {
-                    big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_12.png',
-                    medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_12.png',
-                    small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_12.png'
-                },
-                name: '[跟我走吧]',
-                code: '#$face_12$#'
+            name: '[媚邪狂狷]',
+            code: '#$face_11$#'
+        }, {
+            pics: {
+                big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_12.png',
+                medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_12.png',
+                small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_12.png'
             },
-            {
-                pics: {
-                    big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_13.png',
-                    medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_13.png',
-                    small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_13.png'
-                },
-                name: '[我心里苦]',
-                code: '#$face_13$#'
+            name: '[跟我走吧]',
+            code: '#$face_12$#'
+        }, {
+            pics: {
+                big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_13.png',
+                medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_13.png',
+                small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_13.png'
             },
-            {
-                pics: {
-                    big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_14.png',
-                    medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_14.png',
-                    small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_14.png'
-                },
-                name: '[放学别走]',
-                code: '#$face_14$#'
+            name: '[我心里苦]',
+            code: '#$face_13$#'
+        }, {
+            pics: {
+                big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_14.png',
+                medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_14.png',
+                small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_14.png'
             },
-            {
-                pics: {
-                    big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_15.png',
-                    medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_15.png',
-                    small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_15.png'
-                },
-                name: '[晚安晚安]',
-                code: '#$face_15$#'
+            name: '[放学别走]',
+            code: '#$face_14$#'
+        }, {
+            pics: {
+                big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_15.png',
+                medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_15.png',
+                small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_15.png'
             },
-            {
-                pics: {
-                    big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_16.png',
-                    medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_16.png',
-                    small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_16.png'
-                },
-                name: '[宝宝方了]',
-                code: '#$face_16$#'
-            }
-        ]
+            name: '[晚安晚安]',
+            code: '#$face_15$#'
+        }, {
+            pics: {
+                big: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_16.png',
+                medium: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_16.png',
+                small: 'http://p1.qhimg.com/d/inn/f5c6160c/wukong/face_16.png'
+            },
+            name: '[宝宝方了]',
+            code: '#$face_16$#'
+        }]
     },
     'system': {
         name: 'system',
-        data: [
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f600.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f600.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f600.png'
-                },
-                name: '[露齿而笑]',
-                code: '&#x1F600;'
+        data: [{
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f600.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f600.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f600.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f637.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f637.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f637.png'
-                },
-                name: '[口罩]',
-                code: '&#x1F637;'
+            name: '[露齿而笑]',
+            code: '&#x1F600;'
+        },
+
+        // test
+        {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f600.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f600.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f600.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f602.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f602.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f602.png'
-                },
-                name: '[大笑]',
-                code: '&#x1F602;'
+            name: '[露而笑]',
+            code: '&#x1F600;'
+        },
+        // test
+
+        {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f637.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f637.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f637.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f61d.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f61d.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f61d.png'
-                },
-                name: '[闭眼]',
-                code: '&#x1F61D;'
+            name: '[口罩]',
+            code: '&#x1F637;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f602.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f602.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f602.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f635.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f635.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f635.png'
-                },
-                name: '[眼冒金星]',
-                code: '&#x1F635;'
+            name: '[大笑]',
+            code: '&#x1F602;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f61d.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f61d.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f61d.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f633.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f633.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f633.png'
-                },
-                name: '[害羞]',
-                code: '&#x1F633;'
+            name: '[闭眼]',
+            code: '&#x1F61D;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f635.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f635.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f635.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f631.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f631.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f631.png'
-                },
-                name: '[恐怖]',
-                code: '&#x1F631;'
+            name: '[眼冒金星]',
+            code: '&#x1F635;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f633.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f633.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f633.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f614.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f614.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f614.png'
-                },
-                name: '[忧伤]',
-                code: '&#x1F614;'
+            name: '[害羞]',
+            code: '&#x1F633;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f631.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f631.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f631.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f609.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f609.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f609.png'
-                },
-                name: '[抛媚眼]',
-                code: '&#x1F609;'
+            name: '[恐怖]',
+            code: '&#x1F631;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f614.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f614.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f614.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f605.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f605.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f605.png'
-                },
-                name: '[尴尬]',
-                code: '&#x1F605;'
+            name: '[忧伤]',
+            code: '&#x1F614;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f609.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f609.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f609.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f606.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f606.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f606.png'
-                },
-                name: '[傻笑]',
-                code: '&#x1F606;'
+            name: '[抛媚眼]',
+            code: '&#x1F609;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f605.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f605.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f605.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f607.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f607.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f607.png'
-                },
-                name: '[天真]',
-                code: '&#x1F607;'
+            name: '[尴尬]',
+            code: '&#x1F605;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f606.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f606.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f606.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60a.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60a.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60a.png'
-                },
-                name: '[害羞]',
-                code: '&#x1F60A;'
+            name: '[傻笑]',
+            code: '&#x1F606;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f607.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f607.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f607.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60b.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60b.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60b.png'
-                },
-                name: '[吐舌头]',
-                code: '&#x1F60B;'
+            name: '[天真]',
+            code: '&#x1F607;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60a.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60a.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60a.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60d.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60d.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60d.png'
-                },
-                name: '[犯花痴]',
-                code: '&#x1F60D;'
+            name: '[害羞]',
+            code: '&#x1F60A;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60b.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60b.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60b.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60e.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60e.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60e.png'
-                },
-                name: '[太阳镜]',
-                code: '&#x1F60E;'
+            name: '[吐舌头]',
+            code: '&#x1F60B;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60d.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60d.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60d.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f611.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f611.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f611.png'
-                },
-                name: '[呆然]',
-                code: '&#x1F611;'
+            name: '[犯花痴]',
+            code: '&#x1F60D;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60e.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60e.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60e.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f615.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f615.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f615.png'
-                },
-                name: '[撇嘴]',
-                code: '&#x1F615;'
+            name: '[太阳镜]',
+            code: '&#x1F60E;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f611.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f611.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f611.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f616.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f616.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f616.png'
-                },
-                name: '[困惑]',
-                code: '&#x1F616;'
+            name: '[呆然]',
+            code: '&#x1F611;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f615.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f615.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f615.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f620.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f620.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f620.png'
-                },
-                name: '[愤怒]',
-                code: '&#x1F620;'
+            name: '[撇嘴]',
+            code: '&#x1F615;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f616.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f616.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f616.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f621.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f621.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f621.png'
-                },
-                name: '[发怒]',
-                code: '&#x1F621;'
+            name: '[困惑]',
+            code: '&#x1F616;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f620.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f620.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f620.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f618.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f618.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f618.png'
-                },
-                name: '[嘟嘴]',
-                code: '&#x1F618;'
+            name: '[愤怒]',
+            code: '&#x1F620;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f621.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f621.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f621.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60c.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60c.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60c.png'
-                },
-                name: '[放松]',
-                code: '&#x1F60C;'
+            name: '[发怒]',
+            code: '&#x1F621;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f618.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f618.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f618.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f612.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f612.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f612.png'
-                },
-                name: '[犹豫]',
-                code: '&#x1F612;'
+            name: '[嘟嘴]',
+            code: '&#x1F618;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60c.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60c.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f60c.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f608.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f608.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f608.png'
-                },
-                name: '[小恶魔]',
-                code: '&#x1F608;'
+            name: '[放松]',
+            code: '&#x1F60C;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f612.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f612.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f612.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f4aa.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f4aa.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f4aa.png'
-                },
-                name: '[肌肉]',
-                code: '&#x1F4AA;'
+            name: '[犹豫]',
+            code: '&#x1F612;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f608.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f608.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f608.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f44d.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f44d.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f44d.png'
-                },
-                name: '[赞]',
-                code: '&#x1F44D;'
+            name: '[小恶魔]',
+            code: '&#x1F608;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f4aa.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f4aa.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f4aa.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f44e.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f44e.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f44e.png'
-                },
-                name: '[踩]',
-                code: '&#x1F44E;'
+            name: '[肌肉]',
+            code: '&#x1F4AA;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f44d.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f44d.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f44d.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f44f.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f44f.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f44f.png'
-                },
-                name: '[鼓掌]',
-                code: '&#x1F44F;'
+            name: '[赞]',
+            code: '&#x1F44D;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f44e.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f44e.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f44e.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f44c.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f44c.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f44c.png'
-                },
-                name: '[好的]',
-                code: '&#x1F44C;'
+            name: '[踩]',
+            code: '&#x1F44E;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f44f.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f44f.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f44f.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f64f.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f64f.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f64f.png'
-                },
-                name: '[拜]',
-                code: '&#x1F64F;'
+            name: '[鼓掌]',
+            code: '&#x1F44F;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f44c.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f44c.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f44c.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f381.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f381.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f381.png'
-                },
-                name: '[礼物]',
-                code: '&#x1F381;'
+            name: '[好的]',
+            code: '&#x1F44C;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f64f.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f64f.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f64f.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f389.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f389.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f389.png'
-                },
-                name: '[庆祝]',
-                code: '&#x1F389;'
+            name: '[拜]',
+            code: '&#x1F64F;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f381.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f381.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f381.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f494.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f494.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f494.png'
-                },
-                name: '[心碎]',
-                code: '&#x1F494;'
+            name: '[礼物]',
+            code: '&#x1F381;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f389.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f389.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f389.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f493.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f493.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f493.png'
-                },
-                name: '[跳动的心]',
-                code: '&#x1F493;'
+            name: '[庆祝]',
+            code: '&#x1F389;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f494.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f494.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f494.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f49d.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f49d.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f49d.png'
-                },
-                name: '[爱心]',
-                code: '&#x1F49D;'
+            name: '[心碎]',
+            code: '&#x1F494;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f493.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f493.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f493.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f498.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f498.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f498.png'
-                },
-                name: '[一见钟情]',
-                code: '&#x1F498;'
+            name: '[跳动的心]',
+            code: '&#x1F493;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f49d.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f49d.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f49d.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f47b.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f47b.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f47b.png'
-                },
-                name: '[灵魂]',
-                code: '&#x1F47B;'
+            name: '[爱心]',
+            code: '&#x1F49D;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f498.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f498.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f498.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f382.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f382.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f382.png'
-                },
-                name: '[蛋糕]',
-                code: '&#x1F382;'
+            name: '[一见钟情]',
+            code: '&#x1F498;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f47b.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f47b.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f47b.png'
             },
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f490.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f490.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f490.png'
-                },
-                name: '[花束]',
-                code: '&#x1F490;'
-            }
-        ]
+            name: '[灵魂]',
+            code: '&#x1F47B;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f382.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f382.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f382.png'
+            },
+            name: '[蛋糕]',
+            code: '&#x1F382;'
+        }, {
+            pics: {
+                big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f490.png',
+                medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f490.png',
+                small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f490.png'
+            },
+            name: '[花束]',
+            code: '&#x1F490;'
+        }]
     }
 };
+
 },{}],6:[function(require,module,exports){
+'use strict';
+
 var Trie = require('./trie.js');
 var isSupport = require('./isSupport.js');
 var emotions = require('./emotions.js');
 var assign = require('object-assign');
 
-function Emotionfy(opt){
+function Emotionfy(opt) {
     var opt = opt || {};
     this.emotions = opt.emotions || {};
     this._formattedEmotions = formatEmotions(emotions);
     this._trie = buildTrie(this._formattedEmotions);
-    this._zhTrie = buildTrie(this._formattedEmotions,true);
+    this._zhTrie = buildTrie(this._formattedEmotions, true);
 }
 
-Emotionfy.prototype ={
-    setEmotions:function(emotions){
+Emotionfy.prototype = {
+    setEmotions: function setEmotions(emotions) {
         this.emotions = assign(this.emotions, opt.emotions || {});
         this._formattedEmotions = formatEmotions(emotions);
         this._trie = buildTrie(this._formattedEmotions);
-        this._zhTrie = buildTrie(this._formattedEmotions,true);
+        this._zhTrie = buildTrie(this._formattedEmotions, true);
     },
 
-    getEmotions:function(type){
+    getEmotions: function getEmotions(type) {
 
         var _this = this,
             type = type || '';
 
-        if(!type){
+        if (!type) {
             return _this.emotions;
-        }else{
-            return _this.emotions[type]||{};
+        } else {
+            return _this.emotions[type] || {};
         }
     },
 
-    parse2Code:function(str){
+    parse2Code: function parse2Code(str) {
         var _this = this,
             infos = _this._zhTrie.search(str),
             emotionKeys = _this._formattedEmotions.zhKeys,
             emotionMap = _this._formattedEmotions.zhMaps;
-        for(var i = infos.length-1; i >= 0 ; i--){
+        for (var i = infos.length - 1; i >= 0; i--) {
             var info = infos[i],
                 pos = info[0],
                 keyIndex = info[1],
                 emotionKey = emotionKeys[keyIndex],
                 emotion = emotionMap[emotionKey];
-            str = splice(str,pos,emotionKey.length,emotion.code);
+            str = splice(str, pos, emotionKey.length, emotion.code);
         }
         return str;
     },
 
-    parse2Img:function(str){
-        var ranges = [
-          '\ud83c[\udf00-\udfff]', // U+1F300 to U+1F3FF
-          '\ud83d[\udc00-\ude4f]', // U+1F400 to U+1F64F
-          '\ud83d[\ude80-\udeff]'  // U+1F680 to U+1F6FF
+    parse2Img: function parse2Img(str) {
+        var ranges = ['�[�-�]', // U+1F300 to U+1F3FF
+        '�[�-�]', // U+1F400 to U+1F64F
+        '�[�-�]' // U+1F680 to U+1F6FF
         ];
-        var str = str.replace(new RegExp(ranges.join('|'), 'g'), function(code){
+        var str = str.replace(new RegExp(ranges.join('|'), 'g'), function (code) {
             return '&#x' + toCodePoint(code).toUpperCase() + ';';
         });
 
@@ -1299,7 +1255,7 @@ Emotionfy.prototype ={
             emotionKeys = _this._formattedEmotions.keys,
             emotionMap = _this._formattedEmotions.maps;
 
-        for(var i = infos.length-1; i >= 0 ; i--){
+        for (var i = infos.length - 1; i >= 0; i--) {
             var info = infos[i],
                 pos = info[0],
                 keyIndex = info[1];
@@ -1307,19 +1263,19 @@ Emotionfy.prototype ={
                 emotion = emotionMap[emotionKey],
                 replace = '<img src="' + emotion.pics['big'] + '" alt="' + emotion.name + '" title="' + emotion.name + '">';
             // 判断是否是系统表情，以及是否支持该系统表情
-            if((/&#x1F[0-9]{3};/i).test(emotion['code'])){
-                if(isSupport()){
+            if (/&#x1F[0-9]{3};/i.test(emotion['code'])) {
+                if (isSupport()) {
                     continue;
                 }
             }
-            str = splice(str,pos,emotionKey.length,replace);
+            str = splice(str, pos, emotionKey.length, replace);
         }
         return str;
     }
 
 };
 
-function buildTrie(emotions,isZh){
+function buildTrie(emotions, isZh) {
     var trie = new Trie();
     trie.build(!!isZh ? emotions.zhKeys : emotions.keys);
     return trie;
@@ -1329,17 +1285,17 @@ function splice(str, index, count, add) {
     return str.slice(0, index) + add + str.slice(index + count);
 }
 
-function formatEmotions(emotions){
+function formatEmotions(emotions) {
     var keys = [],
         zhKeys = [],
         emotionMap = {},
         emotionZhMap = {};
-    for(var type in emotions){
+    for (var type in emotions) {
         var ems = emotions[type] || {},
-            datas = ems['data'] ||[];
-        for(var i=0,len=datas.length;i<len;i++){
+            datas = ems['data'] || [];
+        for (var i = 0, len = datas.length; i < len; i++) {
             var emotion = datas[i];
-            if(!!emotion.code || !!emotion.name){
+            if (!!emotion.code || !!emotion.name) {
                 keys.push(emotion.code);
                 zhKeys.push(emotion.name);
                 emotionMap[emotion.code] = emotion;
@@ -1348,42 +1304,45 @@ function formatEmotions(emotions){
         }
     }
     return {
-        keys:keys,
-        zhKeys:zhKeys,
-        maps:emotionMap,
-        zhMaps:emotionZhMap
+        keys: keys,
+        zhKeys: zhKeys,
+        maps: emotionMap,
+        zhMaps: emotionZhMap
     };
 }
 
 function toCodePoint(unicodeSurrogates, sep) {
-    var
-      r = [],
-      c = 0,
-      p = 0,
-      i = 0;
+    var r = [],
+        c = 0,
+        p = 0,
+        i = 0;
     while (i < unicodeSurrogates.length) {
-      c = unicodeSurrogates.charCodeAt(i++);
-      if (p) {
-        r.push((0x10000 + ((p - 0xD800) << 10) + (c - 0xDC00)).toString(16));
-        p = 0;
-      } else if (0xD800 <= c && c <= 0xDBFF) {
-        p = c;
-      } else {
-        r.push(c.toString(16));
-      }
+        c = unicodeSurrogates.charCodeAt(i++);
+        if (p) {
+            r.push((0x10000 + (p - 0xD800 << 10) + (c - 0xDC00)).toString(16));
+            p = 0;
+        } else if (0xD800 <= c && c <= 0xDBFF) {
+            p = c;
+        } else {
+            r.push(c.toString(16));
+        }
     }
     return r.join(sep || '-');
 }
 
-function emotionfyFactory(){
-    return new Emotionfy({emotions:emotions});
+function emotionfyFactory() {
+    return new Emotionfy({ emotions: emotions });
 }
 
 module.exports = emotionfyFactory;
+
 },{"./emotions.js":5,"./isSupport.js":7,"./trie.js":8,"object-assign":1}],7:[function(require,module,exports){
-try{
+'use strict';
+
+var detector;
+try {
     detector = require('web-detector');
-}catch(err){
+} catch (err) {
     //console.log(err);
     detector = {};
 }
@@ -1409,51 +1368,53 @@ var _support = {
     }
 };
 
-function isSupport(){
-    if(!detector || !detector.os || !detector.browser){
+function isSupport() {
+    if (!detector || !detector.os || !detector.browser) {
         return false;
     }
     var osName = detector.os.name;
     var browserName = detector.browser.name;
-    var version = detector.browser.version;   
-    if(_support[osName] && _support[osName][browserName]){
-        if(isNewerOrEqualVersion(_support[osName][browserName], version)){
+    var version = detector.browser.version;
+    if (_support[osName] && _support[osName][browserName]) {
+        if (isNewerOrEqualVersion(_support[osName][browserName], version)) {
             return true;
         }
     }
     return false;
 }
 
-function isNewerOrEqualVersion(curVer, sysVer){
-    if(!curVer){
+function isNewerOrEqualVersion(curVer, sysVer) {
+    if (!curVer) {
         return false;
     }
     return versionComparator(curVer, sysVer);
-
 }
 
-function versionComparator(prev, next){
+function versionComparator(prev, next) {
     var splitedPrev = String(prev).split('.');
     var splitedNext = String(next).split('.');
     var prevLen = splitedPrev.length;
     var nextLen = splitedNext.length;
-    for(var i = 0; i < prevLen; i++){
-        if(parseInt(splitedPrev[i]) > parseInt(splitedNext[i])){
+    for (var i = 0; i < prevLen; i++) {
+        if (parseInt(splitedPrev[i]) > parseInt(splitedNext[i])) {
             return false;
-        }else if(parseInt(splitedPrev[i]) < parseInt(splitedNext[i])){
+        } else if (parseInt(splitedPrev[i]) < parseInt(splitedNext[i])) {
             return true;
         }
     }
-    if(prevLen > nextLen){
+    if (prevLen > nextLen) {
         return false;
-    }else{
+    } else {
         return true;
     }
 }
 
 module.exports = isSupport;
+
 },{"web-detector":3}],8:[function(require,module,exports){
-function Trie(){
+'use strict';
+
+function Trie() {
     this.words = 0;
     this.empty = 1;
     this.index = 0;
@@ -1461,23 +1422,23 @@ function Trie(){
 }
 
 Trie.prototype = {
-    insert: function(str, pos, idx){
-        if(str.length === 0) {
+    insert: function insert(str, pos, idx) {
+        if (str.length === 0) {
             return;
         }
         var T = this;
         var k;
         var child;
 
-        if(pos === undefined) {
+        if (pos === undefined) {
             pos = 0;
         }
-        if(pos === str.length) {
+        if (pos === str.length) {
             T.index = idx;
             return;
         }
         k = str[pos];
-        if(T.children[k] === undefined){
+        if (T.children[k] === undefined) {
             T.children[k] = new Trie();
             T.empty = 0;
             T.children[k].words = this.words + 1;
@@ -1486,30 +1447,30 @@ Trie.prototype = {
         child.insert(str, pos + 1, idx);
     },
 
-    build: function(arr){
+    build: function build(arr) {
         var len = arr.length;
-        for(var i = 0; i < len; i++){
+        for (var i = 0; i < len; i++) {
             this.insert(arr[i], 0, i);
         }
     },
 
-    searchOne: function(str, pos){
-        if(pos === undefined){
+    searchOne: function searchOne(str, pos) {
+        if (pos === undefined) {
             pos = 0;
         }
         var result = {};
-        if(str.length === 0) return result;
+        if (str.length === 0) return result;
         var T = this;
         var child;
         var k;
         result.arr = [];
         k = str[pos];
         child = T.children[k];
-        if(child !== undefined && pos < str.length){
-            return child.searchOne(str,  pos + 1);
+        if (child !== undefined && pos < str.length) {
+            return child.searchOne(str, pos + 1);
         }
-        if(child === undefined && T.empty === 0) return result;
-        if(T.empty == 1){
+        if (child === undefined && T.empty === 0) return result;
+        if (T.empty == 1) {
             result.arr[0] = pos - T.words;
             result.arr[1] = T.index;
             result.words = T.words;
@@ -1518,14 +1479,14 @@ Trie.prototype = {
         return result;
     },
 
-    search: function(str){
-        if(this.empty == 1) return [];
+    search: function search(str) {
+        if (this.empty == 1) return [];
         var len = str.length;
         var searchResult = [];
         var tmp;
-        for(var i = 0; i < len - 1; i++){
+        for (var i = 0; i < len - 1; i++) {
             tmp = this.searchOne(str, i);
-            if(typeof tmp.arr !== 'undefined' && tmp.arr.length > 0){
+            if (typeof tmp.arr !== 'undefined' && tmp.arr.length > 0) {
                 searchResult.push(tmp.arr);
                 i = i + tmp.words - 1;
             }
@@ -1534,12 +1495,7 @@ Trie.prototype = {
     }
 };
 
-if(typeof module !== 'undefined'){
-    module.exports = Trie;
-}
-else if(typeof window !== 'undefined'){
-    window.emotionify.Trie = Trie;
-}
+module.exports = Trie;
 
 },{}]},{},[6])(6)
 });

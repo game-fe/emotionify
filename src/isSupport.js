@@ -1,3 +1,4 @@
+var detector;
 try{
     detector = require('web-detector');
 }catch(err){

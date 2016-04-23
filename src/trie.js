@@ -79,9 +79,4 @@ Trie.prototype = {
     }
 };
 
-if(typeof module !== 'undefined'){
-    module.exports = Trie;
-}
-else if(typeof window !== 'undefined'){
-    window.emotionify.Trie = Trie;
-}
+module.exports = Trie;
