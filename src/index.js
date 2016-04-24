@@ -1,7 +1,19 @@
 var Trie = require('./trie.js');
-var isSupport = require('./isSupport.js');
 var emotions = require('./emotions.js');
 var assign = require('object-assign');
+
+function doesSupportEmoji() {
+    var context, smiley;
+    if (!document.createElement('canvas').getContext) return;
+    context = document.createElement('canvas').getContext('2d');
+    if (typeof context.fillText != 'function') return;
+    smile = String.fromCodePoint(0x1F604); // :smile: String.fromCharCode(55357) + String.fromCharCode(56835)
+
+    context.textBaseline = "top";
+    context.font = "32px Arial";
+    context.fillText(smile, 0, 0);
+    return context.getImageData(16, 16, 1, 1).data[0] !== 0;
+}
 
 function Emotionfy(opt){
     var opt = opt || {};
@@ -71,7 +83,7 @@ Emotionfy.prototype ={
                 replace = '<img src="' + emotion.pics['big'] + '" alt="' + emotion.name + '" title="' + emotion.name + '">';
             // 判断是否是系统表情，以及是否支持该系统表情
             if((/&#x1F[0-9]{3};/i).test(emotion['code'])){
-                if(isSupport()){
+                if(doesSupportEmoji()){
                     continue;
                 }
             }

@@ -30,7 +30,6 @@
     "url": "https://github.com/game-fe/emotionfy/issues"
   },
   "dependencies": {
-    "object-assign": "^4.0.1",
-    "web-detector": "^2.4.11"
+    "object-assign": "^4.0.1"
   }
 }

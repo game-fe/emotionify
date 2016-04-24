@@ -16,16 +16,22 @@ gulp.task('watch',function(){
     gulp.watch('./src/*.js',['clean','build']);
 });
 
-gulp.task('build', ['clean'], function(){
-    return bundler.transform("babelify", {
-        presets: ['es2015']
-    })
+bundler.on('update', function(){
+    bundle();
+});
+
+function bundle(){
+    return bundler
     .bundle()
     .on('error', function(err){
         console.log(err);
     })
     .pipe(source('emotionfyFactory.js'))
-    .pipe(gulp.dest('./dist'))
+    .pipe(gulp.dest('./dist'));
+}
+
+gulp.task('build', ['clean'], function(){
+    bundle();
 });
 
 gulp.task('default',['build','watch']);
