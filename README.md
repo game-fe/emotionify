@@ -23,13 +23,13 @@ emotionfy.parse2Code('[宝宝方了][口水][微笑]');
 ### CommonJS
 
 ```
-var emotionfyFactory = require('emotionfyFactory');
+var emotionfy = require('emotionfy')();
 参照使用方法
 ```
 
 ### Amd
 ```
-define('emotionfyFactory', function(emotionFactory){
+define('emotionfy', function(emotionfy){
 	参照使用方法
 });
 ```
@@ -44,7 +44,7 @@ define('emotionfyFactory', function(emotionFactory){
 
 ## data
 
-setEmotions 中参数的数据格式如下：
+addEmotions 中参数的数据格式如下：
 
 ```
 {
