@@ -7,7 +7,8 @@ module.exports ={
                 "name":"[微笑]",
                 "pics":{
                     "big":"https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/0.gif",
-                    "medium":"https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/0.gif"
+                    "medium":"https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/0.gif",
+                    "small": "https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/0.gif"
                 }
             },
             {
@@ -15,7 +16,8 @@ module.exports ={
                 "name":"[瘪嘴]",
                 "pics":{
                     "big":"https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/1.gif",
-                    "medium":"https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/1.gif"
+                    "medium":"https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/1.gif",
+                    "small": "https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/1.gif"
                 }
             },
             {
@@ -23,7 +25,8 @@ module.exports ={
                 "name":"[口水]",
                 "pics":{
                     "big":"https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/2.gif",
-                    "medium":"https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/2.gif"
+                    "medium":"https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/2.gif",
+                    "small": "https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/2.gif"
                 }
             }
         ]
@@ -189,19 +192,6 @@ module.exports ={
                 name: '[露齿而笑]',
                 code: '&#x1F600;'
             },
-
-            // test
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f600.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f600.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f600.png'
-                },
-                name: '[露而笑]',
-                code: '&#x1F600;'
-            },
-            // test
-
             {
                 pics: {
                     big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f637.png',

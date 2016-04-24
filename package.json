@@ -21,6 +21,10 @@
     "browserify": "^13.0.0",
     "gulp": "^3.9.1",
     "gulp-rename": "^1.2.2",
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.22",
+    "karma-chrome-launcher": "^0.2.3",
+    "karma-jasmine": "^0.3.8",
     "mocha": "^2.4.5",
     "vinyl-source-stream": "^1.1.0"
   },

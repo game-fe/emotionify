@@ -40,6 +40,70 @@ module.exports = Object.assign || function (target, source) {
 };
 
 },{}],2:[function(require,module,exports){
+/*! http://mths.be/fromcodepoint v0.2.1 by @mathias */
+if (!String.fromCodePoint) {
+	(function() {
+		var defineProperty = (function() {
+			// IE 8 only supports `Object.defineProperty` on DOM elements
+			try {
+				var object = {};
+				var $defineProperty = Object.defineProperty;
+				var result = $defineProperty(object, object, object) && $defineProperty;
+			} catch(error) {}
+			return result;
+		}());
+		var stringFromCharCode = String.fromCharCode;
+		var floor = Math.floor;
+		var fromCodePoint = function(_) {
+			var MAX_SIZE = 0x4000;
+			var codeUnits = [];
+			var highSurrogate;
+			var lowSurrogate;
+			var index = -1;
+			var length = arguments.length;
+			if (!length) {
+				return '';
+			}
+			var result = '';
+			while (++index < length) {
+				var codePoint = Number(arguments[index]);
+				if (
+					!isFinite(codePoint) || // `NaN`, `+Infinity`, or `-Infinity`
+					codePoint < 0 || // not a valid Unicode code point
+					codePoint > 0x10FFFF || // not a valid Unicode code point
+					floor(codePoint) != codePoint // not an integer
+				) {
+					throw RangeError('Invalid code point: ' + codePoint);
+				}
+				if (codePoint <= 0xFFFF) { // BMP code point
+					codeUnits.push(codePoint);
+				} else { // Astral code point; split in surrogate halves
+					// http://mathiasbynens.be/notes/javascript-encoding#surrogate-formulae
+					codePoint -= 0x10000;
+					highSurrogate = (codePoint >> 10) + 0xD800;
+					lowSurrogate = (codePoint % 0x400) + 0xDC00;
+					codeUnits.push(highSurrogate, lowSurrogate);
+				}
+				if (index + 1 == length || codeUnits.length > MAX_SIZE) {
+					result += stringFromCharCode.apply(null, codeUnits);
+					codeUnits.length = 0;
+				}
+			}
+			return result;
+		};
+		if (defineProperty) {
+			defineProperty(String, 'fromCodePoint', {
+				'value': fromCodePoint,
+				'configurable': true,
+				'writable': true
+			});
+		} else {
+			String.fromCodePoint = fromCodePoint;
+		}
+	}());
+}
+
+},{}],3:[function(require,module,exports){
 module.exports ={
     "qq":{
         "name":"QQ表情包",
@@ -49,7 +113,8 @@ module.exports ={
                 "name":"[微笑]",
                 "pics":{
                     "big":"https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/0.gif",
-                    "medium":"https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/0.gif"
+                    "medium":"https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/0.gif",
+                    "small": "https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/0.gif"
                 }
             },
             {
@@ -57,7 +122,8 @@ module.exports ={
                 "name":"[瘪嘴]",
                 "pics":{
                     "big":"https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/1.gif",
-                    "medium":"https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/1.gif"
+                    "medium":"https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/1.gif",
+                    "small": "https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/1.gif"
                 }
             },
             {
@@ -65,7 +131,8 @@ module.exports ={
                 "name":"[口水]",
                 "pics":{
                     "big":"https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/2.gif",
-                    "medium":"https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/2.gif"
+                    "medium":"https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/2.gif",
+                    "small": "https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/2.gif"
                 }
             }
         ]
@@ -231,19 +298,6 @@ module.exports ={
                 name: '[露齿而笑]',
                 code: '&#x1F600;'
             },
-
-            // test
-            {
-                pics: {
-                    big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f600.png',
-                    medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f600.png',
-                    small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f600.png'
-                },
-                name: '[露而笑]',
-                code: '&#x1F600;'
-            },
-            // test
-
             {
                 pics: {
                     big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f637.png',
@@ -598,11 +652,65 @@ module.exports ={
         ]
     }
 };
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
+require('string.fromcodepoint');
 var Trie = require('./trie.js');
-var isSupport = require('./isSupport.js');
 var emotions = require('./emotions.js');
 var assign = require('object-assign');
+
+// used to unescape HTML special chars in attributes
+var unescaper = {
+  '&amp;': '&',
+  '&lt;': '<',
+  '&gt;': '>',
+  '&#39;': "'",
+  '&quot;': '"'
+};
+
+function replacer(m){
+    return reunescaper[m];
+}
+
+function unescapeHTML(s){
+    var reunescapers = [
+        '&amp;',
+        '&lt;',
+        '&gt;',
+        '&#39;',
+        '&quot;'
+    ];
+
+    s = s.replace(new RegExp(reunescapers.join('|'), 'g'), function(m){
+        return unescaper[m]
+    });
+    return s;
+}
+
+function utf16ToEntity(s){
+    var ranges = [
+      '\ud83c[\udf00-\udfff]', // U+1F300 to U+1F3FF
+      '\ud83d[\udc00-\ude4f]', // U+1F400 to U+1F64F
+      '\ud83d[\ude80-\udeff]'  // U+1F680 to U+1F6FF
+    ];
+    s = s.replace(new RegExp(ranges.join('|'), 'g'), function(code){
+        return '&#x' + toCodePoint(code).toUpperCase() + ';';
+    });
+
+    return s;
+}
+
+function doesSupportEmoji() {
+    var context, smiley;
+    if (!document.createElement('canvas').getContext) return;
+    context = document.createElement('canvas').getContext('2d');
+    if (typeof context.fillText != 'function') return;
+    smile = String.fromCodePoint(0x1F604); // :smile: String.fromCharCode(55357) + String.fromCharCode(56835)
+
+    context.textBaseline = "top";
+    context.font = "32px Arial";
+    context.fillText(smile, 0, 0);
+    return context.getImageData(16, 16, 1, 1).data[0] !== 0;
+}
 
 function Emotionfy(opt){
     var opt = opt || {};
@@ -613,8 +721,8 @@ function Emotionfy(opt){
 }
 
 Emotionfy.prototype ={
-    setEmotions:function(emotions){
-        this.emotions = assign(this.emotions, opt.emotions || {});
+    addEmotions:function(emotions){
+        this.emotions = assign(this.emotions, emotions || {});
         this._formattedEmotions = formatEmotions(emotions);
         this._trie = buildTrie(this._formattedEmotions);
         this._zhTrie = buildTrie(this._formattedEmotions,true);
@@ -649,14 +757,7 @@ Emotionfy.prototype ={
     },
 
     parse2Img:function(str){
-        var ranges = [
-          '\ud83c[\udf00-\udfff]', // U+1F300 to U+1F3FF
-          '\ud83d[\udc00-\ude4f]', // U+1F400 to U+1F64F
-          '\ud83d[\ude80-\udeff]'  // U+1F680 to U+1F6FF
-        ];
-        var str = str.replace(new RegExp(ranges.join('|'), 'g'), function(code){
-            return '&#x' + toCodePoint(code).toUpperCase() + ';';
-        });
+        str = utf16ToEntity(unescapeHTML(str));
 
         var _this = this,
             infos = _this._trie.search(str),
@@ -672,7 +773,7 @@ Emotionfy.prototype ={
                 replace = '<img src="' + emotion.pics['big'] + '" alt="' + emotion.name + '" title="' + emotion.name + '">';
             // 判断是否是系统表情，以及是否支持该系统表情
             if((/&#x1F[0-9]{3};/i).test(emotion['code'])){
-                if(isSupport()){
+                if(doesSupportEmoji()){
                     continue;
                 }
             }
@@ -744,80 +845,7 @@ function emotionfyFactory(){
 }
 
 module.exports = emotionfyFactory;
-},{"./emotions.js":2,"./isSupport.js":4,"./trie.js":5,"object-assign":1}],4:[function(require,module,exports){
-var detector;
-try{
-    detector = require('../../web-detector/lib/web-detector.js');
-}catch(err){
-    //console.log(err);
-    detector = {};
-}
-
-// 支持的表情的知识库，参考 http://caniemoji.com/
-var _support = {
-    'macosx': {
-        'safari': '10.7',
-        'chrome': '10.10',
-        'firefox': '10.7'
-    },
-    'windows': {
-        'edge': '10',
-        'ie': '9',
-        'Firefox': '7'
-    },
-    'ios': {
-        'safari': '5',
-        'chrome': '5'
-    },
-    'android': {
-        'chrome': '4.4'
-    }
-};
-
-function isSupport(){
-    if(!detector || !detector.os || !detector.browser){
-        return false;
-    }
-    var osName = detector.os.name;
-    var browserName = detector.browser.name;
-    var version = detector.browser.version;   
-    if(_support[osName] && _support[osName][browserName]){
-        if(isNewerOrEqualVersion(_support[osName][browserName], version)){
-            return true;
-        }
-    }
-    return false;
-}
-
-function isNewerOrEqualVersion(curVer, sysVer){
-    if(!curVer){
-        return false;
-    }
-    return versionComparator(curVer, sysVer);
-
-}
-
-function versionComparator(prev, next){
-    var splitedPrev = String(prev).split('.');
-    var splitedNext = String(next).split('.');
-    var prevLen = splitedPrev.length;
-    var nextLen = splitedNext.length;
-    for(var i = 0; i < prevLen; i++){
-        if(parseInt(splitedPrev[i]) > parseInt(splitedNext[i])){
-            return false;
-        }else if(parseInt(splitedPrev[i]) < parseInt(splitedNext[i])){
-            return true;
-        }
-    }
-    if(prevLen > nextLen){
-        return false;
-    }else{
-        return true;
-    }
-}
-
-module.exports = isSupport;
-},{"../../web-detector/lib/web-detector.js":7}],5:[function(require,module,exports){
+},{"./emotions.js":3,"./trie.js":5,"object-assign":1,"string.fromcodepoint":2}],5:[function(require,module,exports){
 function Trie(){
     this.words = 0;
     this.empty = 1;
@@ -900,635 +928,5 @@ Trie.prototype = {
 };
 
 module.exports = Trie;
-},{}],6:[function(require,module,exports){
-"use strict";
-
-var NA_VERSION = "-1";
-var NA = {
-  name: "na",
-  version: NA_VERSION,
-};
-
-function typeOf(type){
-  return function(object) {
-    return Object.prototype.toString.call(object) === "[object " + type + "]";
-  };
-}
-var isString = typeOf("String");
-var isRegExp = typeOf("RegExp");
-var isObject = typeOf("Object");
-var isFunction = typeOf("Function");
-
-function each(object, factory){
-  for(var i = 0, l = object.length; i < l; i++){
-    if(factory.call(object, object[i], i) === false){
-      break;
-    }
-  }
-}
-
-// UserAgent Detector.
-// @param {String} ua, userAgent.
-// @param {Object} expression
-// @return {Object}
-//    返回 null 表示当前表达式未匹配成功。
-function detect(name, expression, ua) {
-  var expr = isFunction(expression) ? expression.call(null, ua) : expression;
-  if (!expr) { return null; }
-  var info = {
-    name: name,
-    version: NA_VERSION,
-    codename: "",
-  };
-  if (expr === true) {
-    return info;
-  }else if(isString(expr)) {
-    if(ua.indexOf(expr) !== -1){
-      return info;
-    }
-  } else if (isObject(expr)) {
-    if(expr.hasOwnProperty("version")){
-      info.version = expr.version;
-    }
-    return info;
-  } else if (isRegExp(expr)) {
-    var m = expr.exec(ua);
-    if (m) {
-      if(m.length >= 2 && m[1]) {
-        info.version = m[1].replace(/_/g, ".");
-      }else{
-        info.version = NA_VERSION;
-      }
-      return info;
-    }
-  }
-}
-
-// 初始化识别。
-function init(ua, patterns, factory, detector){
-  var detected = NA;
-  each(patterns, function(pattern) {
-    var d = detect(pattern[0], pattern[1], ua);
-    if (d) {
-      detected = d;
-      return false;
-    }
-  });
-  factory.call(detector, detected.name, detected.version);
-}
-
-
-class Detector {
-  varructor (rules) {
-    this._rules = rules;
-  }
-
-  // 解析 UserAgent 字符串
-  // @param {String} ua, userAgent string.
-  // @return {Object}
-  parse (ua) {
-    ua = (ua || "").toLowerCase();
-    var d = {};
-
-    init(ua, this._rules.device, function(name, version) {
-      var v = parseFloat(version);
-      d.device = {
-        name: name,
-        version: v,
-        fullVersion: version,
-      };
-      d.device[name] = v;
-    }, d);
-
-    init(ua, this._rules.os, function(name, version){
-      var v = parseFloat(version);
-      d.os = {
-        name: name,
-        version: v,
-        fullVersion: version,
-      };
-      d.os[name] = v;
-    }, d);
-
-    var ieCore = this.IEMode(ua);
-
-    init(ua, this._rules.engine, function(name, version) {
-      var mode = version;
-      // IE 内核的浏览器，修复版本号及兼容模式。
-      if(ieCore){
-        version = ieCore.engineVersion || ieCore.engineMode;
-        mode = ieCore.engineMode;
-      }
-      var v = parseFloat(version);
-      d.engine = {
-        name: name,
-        version: v,
-        fullVersion: version,
-        mode: parseFloat(mode),
-        fullMode: mode,
-        compatible: ieCore ? ieCore.compatible : false,
-      };
-      d.engine[name] = v;
-    }, d);
-
-    init(ua, this._rules.browser, function(name, version) {
-      var mode = version;
-      // IE 内核的浏览器，修复浏览器版本及兼容模式。
-      if(ieCore){
-        // 仅修改 IE 浏览器的版本，其他 IE 内核的版本不修改。
-        if(name === "ie"){
-          version = ieCore.browserVersion;
-        }
-        mode = ieCore.browserMode;
-      }
-      var v = parseFloat(version);
-      d.browser = {
-        name: name,
-        version: v,
-        fullVersion: version,
-        mode: parseFloat(mode),
-        fullMode: mode,
-        compatible: ieCore ? ieCore.compatible : false,
-      };
-      d.browser[name] = v;
-    }, d);
-    return d;
-  }
-
-  // 解析使用 Trident 内核的浏览器的 `浏览器模式` 和 `文档模式` 信息。
-  // @param {String} ua, userAgent string.
-  // @return {Object}
-  IEMode (ua) {
-    if(!this._rules.re_msie.test(ua)){ return null; }
-
-    var m;
-    var engineMode;
-    var engineVersion;
-    var browserMode;
-    var browserVersion;
-
-    // IE8 及其以上提供有 Trident 信息，
-    // 默认的兼容模式，UA 中 Trident 版本不发生变化。
-    if(ua.indexOf("trident/") !== -1) {
-      m = /\btrident\/([0-9.]+)/.exec(ua);
-      if (m && m.length >= 2) {
-        // 真实引擎版本。
-        engineVersion = m[1];
-        var v_version = m[1].split(".");
-        v_version[0] = parseInt(v_version[0], 10) + 4;
-        browserVersion = v_version.join(".");
-      }
-    }
-
-    m = this._rules.re_msie.exec(ua);
-    browserMode = m[1];
-    var v_mode = m[1].split(".");
-    if (typeof browserVersion === "undefined") {
-      browserVersion = browserMode;
-    }
-    v_mode[0] = parseInt(v_mode[0], 10) - 4;
-    engineMode = v_mode.join(".");
-    if (typeof engineVersion === "undefined") {
-      engineVersion = engineMode;
-    }
-
-    return {
-      browserVersion: browserVersion,
-      browserMode: browserMode,
-      engineVersion: engineVersion,
-      engineMode: engineMode,
-      compatible: engineVersion !== engineMode,
-    };
-  }
-
-}
-
-module.exports = Detector;
-
-},{}],7:[function(require,module,exports){
-"use strict";
-
-var Detector = require("./detector.js");
-var WebRules = require("./web-rules.js");
-
-var userAgent = navigator.userAgent || "";
-//var platform = navigator.platform || "";
-var appVersion = navigator.appVersion || "";
-var vendor = navigator.vendor || "";
-var ua = userAgent + " " + appVersion + " " + vendor;
-
-var detector = new Detector(WebRules);
-
-// 解析使用 Trident 内核的浏览器的 `浏览器模式` 和 `文档模式` 信息。
-// @param {String} ua, userAgent string.
-// @return {Object}
-function IEMode(ua) {
-  if (!WebRules.re_msie.test(ua)) {
-    return null;
-  }
-
-  var m;
-  var engineMode;
-  var engineVersion;
-  var browserMode;
-  var browserVersion;
-
-  // IE8 及其以上提供有 Trident 信息，
-  // 默认的兼容模式，UA 中 Trident 版本不发生变化。
-  if (ua.indexOf("trident/") !== -1) {
-    m = /\btrident\/([0-9.]+)/.exec(ua);
-    if (m && m.length >= 2) {
-      // 真实引擎版本。
-      engineVersion = m[1];
-      var v_version = m[1].split(".");
-      v_version[0] = parseInt(v_version[0], 10) + 4;
-      browserVersion = v_version.join(".");
-    }
-  }
-
-  m = WebRules.re_msie.exec(ua);
-  browserMode = m[1];
-  var v_mode = m[1].split(".");
-  if (typeof browserVersion === "undefined") {
-    browserVersion = browserMode;
-  }
-  v_mode[0] = parseInt(v_mode[0], 10) - 4;
-  engineMode = v_mode.join(".");
-  if (typeof engineVersion === "undefined") {
-    engineVersion = engineMode;
-  }
-
-  return {
-    browserVersion: browserVersion,
-    browserMode: browserMode,
-    engineVersion: engineVersion,
-    engineMode: engineMode,
-    compatible: engineVersion !== engineMode
-  };
-}
-
-function WebParse(ua) {
-  var d = detector.parse(ua);
-
-  var ieCore = IEMode(ua);
-
-  // IE 内核的浏览器，修复版本号及兼容模式。
-  if (ieCore) {
-    var engineName = d.engine.name;
-    var engineVersion = ieCore.engineVersion || ieCore.engineMode;
-    var ve = parseFloat(engineVersion);
-    var engineMode = ieCore.engineMode;
-
-    d.engine = {
-      name: engineName,
-      version: ve,
-      fullVersion: engineVersion,
-      mode: parseFloat(engineMode),
-      fullMode: engineMode,
-      compatible: ieCore ? ieCore.compatible : false
-    };
-    d.engine[d.engine.name] = ve;
-
-    var browserName = d.browser.name;
-    // IE 内核的浏览器，修复浏览器版本及兼容模式。
-    // 仅修改 IE 浏览器的版本，其他 IE 内核的版本不修改。
-    var browserVersion = d.browser.fullVersion;
-    if (browserName === "ie") {
-      browserVersion = ieCore.browserVersion;
-    }
-    var browserMode = ieCore.browserMode;
-    var vb = parseFloat(browserVersion);
-    d.browser = {
-      name: browserName,
-      version: vb,
-      fullVersion: browserVersion,
-      mode: parseFloat(browserMode),
-      fullMode: browserMode,
-      compatible: ieCore ? ieCore.compatible : false
-    };
-    d.browser[browserName] = vb;
-  }
-  return d;
-}
-
-var Tan = WebParse(ua);
-Tan.parse = WebParse;
-module.exports = Tan;
-},{"./detector.js":6,"./web-rules.js":8}],8:[function(require,module,exports){
-(function (global){
-"use strict";
-
-const win = typeof window === "undefined" ? global : window;
-const external = win.external;
-const re_msie = /\b(?:msie |ie |trident\/[0-9].*rv[ :])([0-9.]+)/;
-const re_blackberry_10 = /\bbb10\b.+?\bversion\/([\d.]+)/;
-const re_blackberry_6_7 = /\bblackberry\b.+\bversion\/([\d.]+)/;
-const re_blackberry_4_5 = /\bblackberry\d+\/([\d.]+)/;
-
-const NA_VERSION = "-1";
-
-// 硬件设备信息识别表达式。
-// 使用数组可以按优先级排序。
-const DEVICES = [["nokia", function (ua) {
-  // 不能将两个表达式合并，因为可能出现 "nokia; nokia 960"
-  // 这种情况下会优先识别出 nokia/-1
-  if (ua.indexOf("nokia ") !== -1) {
-    return (/\bnokia ([0-9]+)?/
-    );
-  } else {
-    return (/\bnokia([a-z0-9]+)?/
-    );
-  }
-}],
-// 三星有 Android 和 WP 设备。
-["samsung", function (ua) {
-  if (ua.indexOf("samsung") !== -1) {
-    return (/\bsamsung(?:[ \-](?:sgh|gt|sm))?-([a-z0-9]+)/
-    );
-  } else {
-    return (/\b(?:sgh|sch|gt|sm)-([a-z0-9]+)/
-    );
-  }
-}], ["wp", function (ua) {
-  return ua.indexOf("windows phone ") !== -1 || ua.indexOf("xblwp") !== -1 || ua.indexOf("zunewp") !== -1 || ua.indexOf("windows ce") !== -1;
-}], ["pc", "windows"], ["ipad", "ipad"],
-// ipod 规则应置于 iphone 之前。
-["ipod", "ipod"], ["iphone", /\biphone\b|\biph(\d)/], ["mac", "macintosh"],
-// 小米
-["mi", /\bmi[ \-]?([a-z0-9 ]+(?= build|\)))/],
-// 红米
-["hongmi", /\bhm[ \-]?([a-z0-9]+)/], ["aliyun", /\baliyunos\b(?:[\-](\d+))?/], ["meizu", function (ua) {
-  return ua.indexOf("meizu") >= 0 ? /\bmeizu[\/ ]([a-z0-9]+)\b/ : /\bm([0-9cx]{1,4})\b/;
-}], ["nexus", /\bnexus ([0-9s.]+)/], ["huawei", function (ua) {
-  const re_mediapad = /\bmediapad (.+?)(?= build\/huaweimediapad\b)/;
-  if (ua.indexOf("huawei-huawei") !== -1) {
-    return (/\bhuawei\-huawei\-([a-z0-9\-]+)/
-    );
-  } else if (re_mediapad.test(ua)) {
-    return re_mediapad;
-  } else {
-    return (/\bhuawei[ _\-]?([a-z0-9]+)/
-    );
-  }
-}], ["lenovo", function (ua) {
-  if (ua.indexOf("lenovo-lenovo") !== -1) {
-    return (/\blenovo\-lenovo[ \-]([a-z0-9]+)/
-    );
-  } else {
-    return (/\blenovo[ \-]?([a-z0-9]+)/
-    );
-  }
-}],
-// 中兴
-["zte", function (ua) {
-  if (/\bzte\-[tu]/.test(ua)) {
-    return (/\bzte-[tu][ _\-]?([a-su-z0-9\+]+)/
-    );
-  } else {
-    return (/\bzte[ _\-]?([a-su-z0-9\+]+)/
-    );
-  }
-}],
-// 步步高
-["vivo", /\bvivo(?: ([a-z0-9]+))?/], ["htc", function (ua) {
-  if (/\bhtc[a-z0-9 _\-]+(?= build\b)/.test(ua)) {
-    return (/\bhtc[ _\-]?([a-z0-9 ]+(?= build))/
-    );
-  } else {
-    return (/\bhtc[ _\-]?([a-z0-9 ]+)/
-    );
-  }
-}], ["oppo", /\boppo[_]([a-z0-9]+)/], ["konka", /\bkonka[_\-]([a-z0-9]+)/], ["sonyericsson", /\bmt([a-z0-9]+)/], ["coolpad", /\bcoolpad[_ ]?([a-z0-9]+)/], ["lg", /\blg[\-]([a-z0-9]+)/], ["android", /\bandroid\b|\badr\b/], ["blackberry", function (ua) {
-  if (ua.indexOf("blackberry") >= 0) {
-    return (/\bblackberry\s?(\d+)/
-    );
-  }
-  return "bb10";
-}]];
-
-// 操作系统信息识别表达式
-const OS = [["wp", function (ua) {
-  if (ua.indexOf("windows phone ") !== -1) {
-    return (/\bwindows phone (?:os )?([0-9.]+)/
-    );
-  } else if (ua.indexOf("xblwp") !== -1) {
-    return (/\bxblwp([0-9.]+)/
-    );
-  } else if (ua.indexOf("zunewp") !== -1) {
-    return (/\bzunewp([0-9.]+)/
-    );
-  }
-  return "windows phone";
-}], ["windows", /\bwindows nt ([0-9.]+)/], ["macosx", /\bmac os x ([0-9._]+)/], ["ios", function (ua) {
-  if (/\bcpu(?: iphone)? os /.test(ua)) {
-    return (/\bcpu(?: iphone)? os ([0-9._]+)/
-    );
-  } else if (ua.indexOf("iph os ") !== -1) {
-    return (/\biph os ([0-9_]+)/
-    );
-  } else {
-    return (/\bios\b/
-    );
-  }
-}], ["yunos", /\baliyunos ([0-9.]+)/], ["android", function (ua) {
-  if (ua.indexOf("android") >= 0) {
-    return (/\bandroid[ \/-]?([0-9.x]+)?/
-    );
-  } else if (ua.indexOf("adr") >= 0) {
-    if (ua.indexOf("mqqbrowser") >= 0) {
-      return (/\badr[ ]\(linux; u; ([0-9.]+)?/
-      );
-    } else {
-      return (/\badr(?:[ ]([0-9.]+))?/
-      );
-    }
-  }
-  return "android";
-  //return /\b(?:android|\badr)(?:[\/\- ](?:\(linux; u; )?)?([0-9.x]+)?/;
-}], ["chromeos", /\bcros i686 ([0-9.]+)/], ["linux", "linux"], ["windowsce", /\bwindows ce(?: ([0-9.]+))?/], ["symbian", /\bsymbian(?:os)?\/([0-9.]+)/], ["blackberry", function (ua) {
-  const m = ua.match(re_blackberry_10) || ua.match(re_blackberry_6_7) || ua.match(re_blackberry_4_5);
-  return m ? { version: m[1] } : "blackberry";
-}]];
-
-// 针对同源的 TheWorld 和 360 的 external 对象进行检测。
-// @param {String} key, 关键字，用于检测浏览器的安装路径中出现的关键字。
-// @return {Undefined,Boolean,Object} 返回 undefined 或 false 表示检测未命中。
-function checkTW360External(key) {
-  if (!external) {
-    return;
-  } // return undefined.
-  try {
-    //        360安装路径：
-    //        C:%5CPROGRA~1%5C360%5C360se3%5C360SE.exe
-    const runpath = external.twGetRunPath.toLowerCase();
-    // 360SE 3.x ~ 5.x support.
-    // 暴露的 external.twGetVersion 和 external.twGetSecurityID 均为 undefined。
-    // 因此只能用 try/catch 而无法使用特性判断。
-    const security = external.twGetSecurityID(win);
-    const version = external.twGetVersion(security);
-
-    if (runpath && runpath.indexOf(key) === -1) {
-      return false;
-    }
-    if (version) {
-      return { version: version };
-    }
-  } catch (ex) {/* */}
-}
-
-const ENGINE = [["edgehtml", /edge\/([0-9.]+)/], ["trident", re_msie], ["blink", function () {
-  return "chrome" in win && "CSS" in win && /\bapplewebkit[\/]?([0-9.+]+)/;
-}], ["webkit", /\bapplewebkit[\/]?([0-9.+]+)/], ["gecko", function (ua) {
-  const match = ua.match(/\brv:([\d\w.]+).*\bgecko\/(\d+)/);
-  if (match) {
-    return {
-      version: match[1] + "." + match[2]
-    };
-  }
-}], ["presto", /\bpresto\/([0-9.]+)/], ["androidwebkit", /\bandroidwebkit\/([0-9.]+)/], ["coolpadwebkit", /\bcoolpadwebkit\/([0-9.]+)/], ["u2", /\bu2\/([0-9.]+)/], ["u3", /\bu3\/([0-9.]+)/]];
-const BROWSER = [
-// Microsoft Edge Browser, Default browser in Windows 10.
-["edge", /edge\/([0-9.]+)/],
-// Sogou.
-["sogou", function (ua) {
-  if (ua.indexOf("sogoumobilebrowser") >= 0) {
-    return (/sogoumobilebrowser\/([0-9.]+)/
-    );
-  } else if (ua.indexOf("sogoumse") >= 0) {
-    return true;
-  }
-  return (/ se ([0-9.x]+)/
-  );
-}],
-// TheWorld (世界之窗)
-// 由于裙带关系，TheWorld API 与 360 高度重合。
-// 只能通过 UA 和程序安装路径中的应用程序名来区分。
-// TheWorld 的 UA 比 360 更靠谱，所有将 TheWorld 的规则放置到 360 之前。
-["theworld", function () {
-  const x = checkTW360External("theworld");
-  if (typeof x !== "undefined") {
-    return x;
-  }
-  return (/theworld(?: ([\d.])+)?/
-  );
-}],
-// 360SE, 360EE.
-["360", function (ua) {
-  const x = checkTW360External("360se");
-  if (typeof x !== "undefined") {
-    return x;
-  }
-  if (ua.indexOf("360 aphone browser") !== -1) {
-    return (/\b360 aphone browser \(([^\)]+)\)/
-    );
-  }
-  return (/\b360(?:se|ee|chrome|browser)\b/
-  );
-}],
-// Maxthon
-["maxthon", function () {
-  try {
-    if (external && (external.mxVersion || external.max_version)) {
-      return {
-        version: external.mxVersion || external.max_version
-      };
-    }
-  } catch (ex) {/* */}
-  return (/\b(?:maxthon|mxbrowser)(?:[ \/]([0-9.]+))?/
-  );
-}], ["micromessenger", /\bmicromessenger\/([\d.]+)/], ["qq", /\bm?qqbrowser\/([0-9.]+)/], ["green", "greenbrowser"], ["tt", /\btencenttraveler ([0-9.]+)/], ["liebao", function (ua) {
-  if (ua.indexOf("liebaofast") >= 0) {
-    return (/\bliebaofast\/([0-9.]+)/
-    );
-  }
-  if (ua.indexOf("lbbrowser") === -1) {
-    return false;
-  }
-  let version;
-  try {
-    if (external && external.LiebaoGetVersion) {
-      version = external.LiebaoGetVersion();
-    }
-  } catch (ex) {/* */}
-  return {
-    version: version || NA_VERSION
-  };
-}], ["tao", /\btaobrowser\/([0-9.]+)/], ["coolnovo", /\bcoolnovo\/([0-9.]+)/], ["saayaa", "saayaa"],
-// 有基于 Chromniun 的急速模式和基于 IE 的兼容模式。必须在 IE 的规则之前。
-["baidu", /\b(?:ba?idubrowser|baiduhd)[ \/]([0-9.x]+)/],
-// 后面会做修复版本号，这里只要能识别是 IE 即可。
-["ie", re_msie], ["mi", /\bmiuibrowser\/([0-9.]+)/],
-// Opera 15 之后开始使用 Chromniun 内核，需要放在 Chrome 的规则之前。
-["opera", function (ua) {
-  const re_opera_old = /\bopera.+version\/([0-9.ab]+)/;
-  const re_opera_new = /\bopr\/([0-9.]+)/;
-  return re_opera_old.test(ua) ? re_opera_old : re_opera_new;
-}], ["oupeng", /\boupeng\/([0-9.]+)/], ["yandex", /yabrowser\/([0-9.]+)/],
-// 支付宝手机客户端
-["ali-ap", function (ua) {
-  if (ua.indexOf("aliapp") > 0) {
-    return (/\baliapp\(ap\/([0-9.]+)\)/
-    );
-  } else {
-    return (/\balipayclient\/([0-9.]+)\b/
-    );
-  }
-}],
-// 支付宝平板客户端
-["ali-ap-pd", /\baliapp\(ap-pd\/([0-9.]+)\)/],
-// 支付宝商户客户端
-["ali-am", /\baliapp\(am\/([0-9.]+)\)/],
-// 淘宝手机客户端
-["ali-tb", /\baliapp\(tb\/([0-9.]+)\)/],
-// 淘宝平板客户端
-["ali-tb-pd", /\baliapp\(tb-pd\/([0-9.]+)\)/],
-// 天猫手机客户端
-["ali-tm", /\baliapp\(tm\/([0-9.]+)\)/],
-// 天猫平板客户端
-["ali-tm-pd", /\baliapp\(tm-pd\/([0-9.]+)\)/],
-// UC 浏览器，可能会被识别为 Android 浏览器，规则需要前置。
-// UC 桌面版浏览器携带 Chrome 信息，需要放在 Chrome 之前。
-["uc", function (ua) {
-  if (ua.indexOf("ucbrowser/") >= 0) {
-    return (/\bucbrowser\/([0-9.]+)/
-    );
-  } else if (ua.indexOf("ubrowser/") >= 0) {
-    return (/\bubrowser\/([0-9.]+)/
-    );
-  } else if (/\buc\/[0-9]/.test(ua)) {
-    return (/\buc\/([0-9.]+)/
-    );
-  } else if (ua.indexOf("ucweb") >= 0) {
-    // `ucweb/2.0` is compony info.
-    // `UCWEB8.7.2.214/145/800` is browser info.
-    return (/\bucweb([0-9.]+)?/
-    );
-  } else {
-    return (/\b(?:ucbrowser|uc)\b/
-    );
-  }
-}], ["chrome", / (?:chrome|crios|crmo)\/([0-9.]+)/],
-// Android 默认浏览器。该规则需要在 safari 之前。
-["android", function (ua) {
-  if (ua.indexOf("android") === -1) {
-    return;
-  }
-  return (/\bversion\/([0-9.]+(?: beta)?)/
-  );
-}], ["blackberry", function (ua) {
-  const m = ua.match(re_blackberry_10) || ua.match(re_blackberry_6_7) || ua.match(re_blackberry_4_5);
-  return m ? { version: m[1] } : "blackberry";
-}], ["safari", /\bversion\/([0-9.]+(?: beta)?)(?: mobile(?:\/[a-z0-9]+)?)? safari\//],
-// 如果不能被识别为 Safari，则猜测是 WebView。
-["webview", /\bcpu(?: iphone)? os (?:[0-9._]+).+\bapplewebkit\b/], ["firefox", /\bfirefox\/([0-9.ab]+)/], ["nokia", /\bnokiabrowser\/([0-9.]+)/]];
-
-module.exports = {
-  device: DEVICES,
-  os: OS,
-  browser: BROWSER,
-  engine: ENGINE,
-  re_msie: re_msie
-};
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}]},{},[3])(3)
+},{}]},{},[4])(4)
 });

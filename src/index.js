@@ -46,9 +46,9 @@ function utf16ToEntity(s){
 
 function doesSupportEmoji() {
     var context, smiley;
-    if (!document.createElement('canvas').getContext) return;
+    if (!document || !document.createElement || !document.createElement('canvas').getContext) return false;
     context = document.createElement('canvas').getContext('2d');
-    if (typeof context.fillText != 'function') return;
+    if (typeof context.fillText != 'function') return false;
     smile = String.fromCodePoint(0x1F604); // :smile: String.fromCharCode(55357) + String.fromCharCode(56835)
 
     context.textBaseline = "top";
@@ -66,8 +66,8 @@ function Emotionfy(opt){
 }
 
 Emotionfy.prototype ={
-    setEmotions:function(emotions){
-        this.emotions = assign(this.emotions, opt.emotions || {});
+    addEmotions:function(emotions){
+        this.emotions = assign(this.emotions, emotions || {});
         this._formattedEmotions = formatEmotions(emotions);
         this._trie = buildTrie(this._formattedEmotions);
         this._zhTrie = buildTrie(this._formattedEmotions,true);
