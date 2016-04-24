@@ -1,7 +1,6 @@
 var gulp = require('gulp'),
     rename = require('gulp-rename'),
     source = require('vinyl-source-stream'),
-    babelify = require('babelify'),
     browserify = require('browserify');
 
 var bundler = browserify('./src/index.js', {

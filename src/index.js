@@ -3,6 +3,47 @@ var Trie = require('./trie.js');
 var emotions = require('./emotions.js');
 var assign = require('object-assign');
 
+// used to unescape HTML special chars in attributes
+var unescaper = {
+  '&amp;': '&',
+  '&lt;': '<',
+  '&gt;': '>',
+  '&#39;': "'",
+  '&quot;': '"'
+};
+
+function replacer(m){
+    return reunescaper[m];
+}
+
+function unescapeHTML(s){
+    var reunescapers = [
+        '&amp;',
+        '&lt;',
+        '&gt;',
+        '&#39;',
+        '&quot;'
+    ];
+
+    s = s.replace(new RegExp(reunescapers.join('|'), 'g'), function(m){
+        return unescaper[m]
+    });
+    return s;
+}
+
+function utf16ToEntity(s){
+    var ranges = [
+      '\ud83c[\udf00-\udfff]', // U+1F300 to U+1F3FF
+      '\ud83d[\udc00-\ude4f]', // U+1F400 to U+1F64F
+      '\ud83d[\ude80-\udeff]'  // U+1F680 to U+1F6FF
+    ];
+    s = s.replace(new RegExp(ranges.join('|'), 'g'), function(code){
+        return '&#x' + toCodePoint(code).toUpperCase() + ';';
+    });
+
+    return s;
+}
+
 function doesSupportEmoji() {
     var context, smiley;
     if (!document.createElement('canvas').getContext) return;
@@ -61,14 +102,7 @@ Emotionfy.prototype ={
     },
 
     parse2Img:function(str){
-        var ranges = [
-          '\ud83c[\udf00-\udfff]', // U+1F300 to U+1F3FF
-          '\ud83d[\udc00-\ude4f]', // U+1F400 to U+1F64F
-          '\ud83d[\ude80-\udeff]'  // U+1F680 to U+1F6FF
-        ];
-        var str = str.replace(new RegExp(ranges.join('|'), 'g'), function(code){
-            return '&#x' + toCodePoint(code).toUpperCase() + ';';
-        });
+        str = utf16ToEntity(unescapeHTML(str));
 
         var _this = this,
             infos = _this._trie.search(str),
