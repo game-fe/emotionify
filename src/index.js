@@ -1,3 +1,4 @@
+require('string.fromcodepoint');
 var Trie = require('./trie.js');
 var emotions = require('./emotions.js');
 var assign = require('object-assign');
