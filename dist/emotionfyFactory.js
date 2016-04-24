@@ -653,6 +653,7 @@ module.exports ={
     }
 };
 },{}],4:[function(require,module,exports){
+'use strict';
 require('string.fromcodepoint');
 var Trie = require('./trie.js');
 var emotions = require('./emotions.js');
@@ -701,14 +702,14 @@ function utf16ToEntity(s){
 
 function doesSupportEmoji() {
     var context, smiley;
-    if (!document.createElement('canvas').getContext) return;
+    if (!document || !document.createElement || !document.createElement('canvas').getContext) return false;
     context = document.createElement('canvas').getContext('2d');
-    if (typeof context.fillText != 'function') return;
-    smile = String.fromCodePoint(0x1F604); // :smile: String.fromCharCode(55357) + String.fromCharCode(56835)
+    if (typeof context.fillText != 'function') return false;
+    smiley = String.fromCodePoint(0x1F604); // :smile: String.fromCharCode(55357) + String.fromCharCode(56835)
 
     context.textBaseline = "top";
     context.font = "32px Arial";
-    context.fillText(smile, 0, 0);
+    context.fillText(smiley, 0, 0);
     return context.getImageData(16, 16, 1, 1).data[0] !== 0;
 }
 
