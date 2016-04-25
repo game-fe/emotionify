@@ -1,20 +1,20 @@
-# emotionfy
+# emotionify
 
 ## api example
 
 ### 使用方法
 ```
-var emotionfy = emotionfyFactory();
+var emotionify = emotionifyFactory();
 // parse code to img
-emotionfy.parse2Img("#$face_01$#哈哈/::)&#x1F600;");
+emotionify.parse2Img("#$face_01$#哈哈/::)&#x1F600;");
 
 // parse name to code
-emotionfy.parse2Code('[宝宝方了][口水][微笑]');
+emotionify.parse2Code('[宝宝方了][口水][微笑]');
 ```
 
 ### browser
 ```
-<script src="./dist/emotionfyFactory"></script>
+<script src="./dist/emotionifyFactory"></script>
 <script>
 	参照使用方法
 </script>
@@ -23,13 +23,13 @@ emotionfy.parse2Code('[宝宝方了][口水][微笑]');
 ### CommonJS
 
 ```
-var emotionfy = require('emotionfy')();
+var emotionify = require('emotionify')();
 参照使用方法
 ```
 
 ### Amd
 ```
-define('emotionfy', function(emotionfy){
+define('emotionify', function(emotionify){
 	参照使用方法
 });
 ```
