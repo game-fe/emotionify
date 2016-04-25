@@ -4,7 +4,8 @@
   "description": "common emotion service ",
   "main": "./src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "",
+    "prepublish": "gulp build"
   },
   "keywords": [
     "emotion",
@@ -19,11 +20,14 @@
   "devDependencies": {
     "browser-sync": "^2.12.3",
     "browserify": "^13.0.0",
+    "coveralls": "^2.11.9",
     "gulp": "^3.9.1",
     "gulp-rename": "^1.2.2",
+    "istanbul": "^0.4.3",
     "jasmine-core": "^2.4.1",
     "karma": "^0.13.22",
     "karma-chrome-launcher": "^0.2.3",
+    "karma-coverage": "^0.5.5",
     "karma-jasmine": "^0.3.8",
     "mocha": "^2.4.5",
     "vinyl-source-stream": "^1.1.0"

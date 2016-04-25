@@ -674,10 +674,10 @@ function emotionify(opt){
 
 emotionify.prototype ={
     addEmotions:function(emotions){
-        this.emotions = assign(this.emotions, emotions || {});
-        this._formattedEmotions = formatEmotions(emotions);
-        this._trie = buildTrie(this._formattedEmotions);
-        this._zhTrie = buildTrie(this._formattedEmotions,true);
+        _emotions = assign(_emotions, emotions || {});
+        _formattedEmotions = util.formatEmotions(emotions);
+        _trie = util.buildTrie(_formattedEmotions);
+        _zhTrie = util.buildTrie(_formattedEmotions,true);
     },
 
     getEmotions:function(type){
