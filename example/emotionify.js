@@ -1,4 +1,4 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Emotionify = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.emotionify = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /* eslint-disable no-unused-vars */
 'use strict';
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -655,21 +655,25 @@ module.exports ={
 
 },{}],4:[function(require,module,exports){
 'use strict';
-var _emotions = require('./emotions.js');//内置表情
+var emotions = require('./emotions.js');//内置表情
 var assign = require('object-assign');
 var util = require('./util.js');
 
-var _formattedEmotions,     // 提前处理表情数据，方便后面使用 Trie 算法进行查找
+var _emotions,
+    _formattedEmotions,     // 提前处理表情数据，方便后面使用 Trie 算法进行查找
     _trie,                  // code -> obj 的查找树
     _zhTrie,                // name -> obj 的查找树
     _isSupportEmoji = util.doesSupportEmoji();  // 判断浏览器是否支持系统表情
 
-function Emotionify(opt){
+function Emotion(opt){
     var opt = opt || {};
-    this.addEmotions(opt.emotions || {} );
+    _emotions = opt.emotions;
+    _formattedEmotions = util.formatEmotions(_emotions);
+    _trie = util.buildTrie(_formattedEmotions);
+    _zhTrie = util.buildTrie(_formattedEmotions,true);
 }
 
-Emotionify.prototype ={
+Emotion.prototype ={
 
     addEmotions:function(emotions){
         _emotions = assign(_emotions, emotions || {});
@@ -733,11 +737,7 @@ Emotionify.prototype ={
 
 };
 
-// function emotionifyFactory(){
-//     return new emotionify({emotions:emotions});
-// }
-
-module.exports = Emotionify;
+module.exports = new Emotion({emotions: emotions});
 
 },{"./emotions.js":3,"./util.js":6,"object-assign":1}],5:[function(require,module,exports){
 function Trie(){

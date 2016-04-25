@@ -1,19 +1,23 @@
 'use strict';
-var _emotions = require('./emotions.js');//内置表情
+var emotions = require('./emotions.js');//内置表情
 var assign = require('object-assign');
 var util = require('./util.js');
 
-var _formattedEmotions,     // 提前处理表情数据，方便后面使用 Trie 算法进行查找
+var _emotions,
+    _formattedEmotions,     // 提前处理表情数据，方便后面使用 Trie 算法进行查找
     _trie,                  // code -> obj 的查找树
     _zhTrie,                // name -> obj 的查找树
     _isSupportEmoji = util.doesSupportEmoji();  // 判断浏览器是否支持系统表情
 
-function Emotionify(opt){
+function Emotion(opt){
     var opt = opt || {};
-    this.addEmotions(opt.emotions || {} );
+    _emotions = opt.emotions;
+    _formattedEmotions = util.formatEmotions(_emotions);
+    _trie = util.buildTrie(_formattedEmotions);
+    _zhTrie = util.buildTrie(_formattedEmotions,true);
 }
 
-Emotionify.prototype ={
+Emotion.prototype ={
 
     addEmotions:function(emotions){
         _emotions = assign(_emotions, emotions || {});
@@ -73,12 +77,21 @@ Emotionify.prototype ={
             str = util.splice(str,pos,emotionKey.length,replace);
         }
         return str;
+    },
+
+    filterEmotion: function(){
+        var ranges = [
+          '\ud83c[\udf00-\udfff]', // U+1F300 to U+1F3FF
+          '\ud83d[\udc00-\ude4f]', // U+1F400 to U+1F64F
+          '\ud83d[\ude80-\udeff]'  // U+1F680 to U+1F6FF
+        ];
+        s = s.replace(new RegExp(ranges.join('|'), 'g'), function(code){
+            return '';
+        });
+
+        return s;
     }
 
 };
 
-// function emotionifyFactory(){
-//     return new emotionify({emotions:emotions});
-// }
-
-module.exports = Emotionify;
+module.exports = new Emotion({emotions: emotions});

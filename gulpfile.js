@@ -5,7 +5,7 @@ var gulp = require('gulp'),
     browserify = require('browserify');
 
 var bundler = browserify('./src/index.js', {
-    standalone: 'Emotionify'
+    standalone: 'emotionify'
 });
 
 gulp.task('clean',function(){

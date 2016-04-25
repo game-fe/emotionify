@@ -1,6 +1,5 @@
 describe('method parse2Img', function(){
 	it('parse2Img() should parse a string contains code to a string contains image', function(){
-		var emotionify = emotionifyFactory();
 		// parse code to img
 		var parsedStr = emotionify.parse2Img("#$face_01$#/::)&#x1F600;");
 
@@ -12,7 +11,6 @@ describe('method parse2Img', function(){
 
 describe('method parse2Code', function(){
 	it('parse2Code() should parse a string contains code to a string contains image', function(){
-		var emotionify = emotionifyFactory();
 		// parse name to code
 		var parsedStr = emotionify.parse2Code('[宝宝方了][微笑][露齿而笑]');
 
@@ -24,7 +22,6 @@ describe('method parse2Code', function(){
 
 describe('method addEmotions', function(){
 	it('addEmotions() should add data to existing dataset', function(){
-		var emotionify = emotionifyFactory();
 
 		var newData = {
 			'name': 'test',

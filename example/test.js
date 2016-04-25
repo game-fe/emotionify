@@ -1,5 +1,4 @@
-var emotionifyFactory = require('../dist/emotionifyFactory.js');
-var emotionify = emotionifyFactory();
+var emotionify = require('../dist/emotionifyFactory.js');
 // parse code to img
 var parsedImg = emotionify.parse2Img("#$face_01$#/::)&#x1F600;");
 console.log(parsedImg);
