@@ -1,5 +1,13 @@
 # emotionify
 
+## emotionfy
+[![npm version](https://img.shields.io/npm/v/emotionfy.svg?style=flat-square)](https://www.npmjs.com/package/karma-coverage) [![npm downloads](https://img.shields.io/npm/dm/emotionfy.svg?style=flat-square)](https://www.npmjs.com/package/karma-coverage)
+
+## emotionify
+
+[![npm version](https://img.shields.io/npm/v/emotionify.svg?style=flat-square)](https://www.npmjs.com/package/karma-coverage) [![npm downloads](https://img.shields.io/npm/dm/emotionify.svg?style=flat-square)](https://www.npmjs.com/package/karma-coverage)
+
+
 ## api example
 
 ### 使用方法
