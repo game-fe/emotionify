@@ -4,7 +4,7 @@ var gulp = require('gulp'),
     browserify = require('browserify');
 
 var bundler = browserify('./src/index.js', {
-    standalone: 'emotionfyFactory'
+    standalone: 'emotionifyFactory'
 });
 
 gulp.task('clean',function(){
@@ -25,7 +25,7 @@ function bundle(){
     .on('error', function(err){
         console.log(err);
     })
-    .pipe(source('emotionfyFactory.js'))
+    .pipe(source('emotionifyFactory.js'))
     .pipe(gulp.dest('./dist'));
 }
 

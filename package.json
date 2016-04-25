@@ -1,5 +1,5 @@
 {
-  "name": "emotionfy",
+  "name": "emotionify",
   "version": "1.0.12",
   "description": "common emotion service ",
   "main": "./src/index.js",
@@ -12,7 +12,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/game-fe/emotionfy.git"
+    "url": "git+https://github.com/game-fe/emotionify.git"
   },
   "author": "game-fe (https://github.com/game-fe)",
   "license": "ISC",
@@ -29,7 +29,7 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "bugs": {
-    "url": "https://github.com/game-fe/emotionfy/issues"
+    "url": "https://github.com/game-fe/emotionify/issues"
   },
   "dependencies": {
     "object-assign": "^4.0.1",

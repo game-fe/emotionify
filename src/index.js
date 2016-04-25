@@ -58,7 +58,7 @@ function doesSupportEmoji() {
     return context.getImageData(16, 16, 1, 1).data[0] !== 0;
 }
 
-function Emotionfy(opt){
+function emotionify(opt){
     var opt = opt || {};
     this.emotions = opt.emotions || {};
     this._formattedEmotions = formatEmotions(emotions);
@@ -66,7 +66,7 @@ function Emotionfy(opt){
     this._zhTrie = buildTrie(this._formattedEmotions,true);
 }
 
-Emotionfy.prototype ={
+emotionify.prototype ={
     addEmotions:function(emotions){
         this.emotions = assign(this.emotions, emotions || {});
         this._formattedEmotions = formatEmotions(emotions);
@@ -186,8 +186,8 @@ function toCodePoint(unicodeSurrogates, sep) {
     return r.join(sep || '-');
 }
 
-function emotionfyFactory(){
-    return new Emotionfy({emotions:emotions});
+function emotionifyFactory(){
+    return new emotionify({emotions:emotions});
 }
 
-module.exports = emotionfyFactory;
+module.exports = emotionifyFactory;
