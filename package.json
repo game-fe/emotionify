@@ -4,8 +4,7 @@
   "description": "common emotion service ",
   "main": "./src/index.js",
   "scripts": {
-    "test": "",
-    "prepublish": "gulp build"
+    "test": ""
   },
   "keywords": [
     "emotion",
