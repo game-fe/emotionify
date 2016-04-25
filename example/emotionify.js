@@ -1,3 +1,109 @@
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Emotionify = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+/* eslint-disable no-unused-vars */
+'use strict';
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+function toObject(val) {
+	if (val === null || val === undefined) {
+		throw new TypeError('Object.assign cannot be called with null or undefined');
+	}
+
+	return Object(val);
+}
+
+module.exports = Object.assign || function (target, source) {
+	var from;
+	var to = toObject(target);
+	var symbols;
+
+	for (var s = 1; s < arguments.length; s++) {
+		from = Object(arguments[s]);
+
+		for (var key in from) {
+			if (hasOwnProperty.call(from, key)) {
+				to[key] = from[key];
+			}
+		}
+
+		if (Object.getOwnPropertySymbols) {
+			symbols = Object.getOwnPropertySymbols(from);
+			for (var i = 0; i < symbols.length; i++) {
+				if (propIsEnumerable.call(from, symbols[i])) {
+					to[symbols[i]] = from[symbols[i]];
+				}
+			}
+		}
+	}
+
+	return to;
+};
+
+},{}],2:[function(require,module,exports){
+/*! http://mths.be/fromcodepoint v0.2.1 by @mathias */
+if (!String.fromCodePoint) {
+	(function() {
+		var defineProperty = (function() {
+			// IE 8 only supports `Object.defineProperty` on DOM elements
+			try {
+				var object = {};
+				var $defineProperty = Object.defineProperty;
+				var result = $defineProperty(object, object, object) && $defineProperty;
+			} catch(error) {}
+			return result;
+		}());
+		var stringFromCharCode = String.fromCharCode;
+		var floor = Math.floor;
+		var fromCodePoint = function(_) {
+			var MAX_SIZE = 0x4000;
+			var codeUnits = [];
+			var highSurrogate;
+			var lowSurrogate;
+			var index = -1;
+			var length = arguments.length;
+			if (!length) {
+				return '';
+			}
+			var result = '';
+			while (++index < length) {
+				var codePoint = Number(arguments[index]);
+				if (
+					!isFinite(codePoint) || // `NaN`, `+Infinity`, or `-Infinity`
+					codePoint < 0 || // not a valid Unicode code point
+					codePoint > 0x10FFFF || // not a valid Unicode code point
+					floor(codePoint) != codePoint // not an integer
+				) {
+					throw RangeError('Invalid code point: ' + codePoint);
+				}
+				if (codePoint <= 0xFFFF) { // BMP code point
+					codeUnits.push(codePoint);
+				} else { // Astral code point; split in surrogate halves
+					// http://mathiasbynens.be/notes/javascript-encoding#surrogate-formulae
+					codePoint -= 0x10000;
+					highSurrogate = (codePoint >> 10) + 0xD800;
+					lowSurrogate = (codePoint % 0x400) + 0xDC00;
+					codeUnits.push(highSurrogate, lowSurrogate);
+				}
+				if (index + 1 == length || codeUnits.length > MAX_SIZE) {
+					result += stringFromCharCode.apply(null, codeUnits);
+					codeUnits.length = 0;
+				}
+			}
+			return result;
+		};
+		if (defineProperty) {
+			defineProperty(String, 'fromCodePoint', {
+				'value': fromCodePoint,
+				'configurable': true,
+				'writable': true
+			});
+		} else {
+			String.fromCodePoint = fromCodePoint;
+		}
+	}());
+}
+
+},{}],3:[function(require,module,exports){
 module.exports ={
     "qq":{
         "name":"QQ表情包",
@@ -546,3 +652,299 @@ module.exports ={
         ]
     }
 };
+
+},{}],4:[function(require,module,exports){
+'use strict';
+var _emotions = require('./emotions.js');//内置表情
+var assign = require('object-assign');
+var util = require('./util.js');
+
+var _formattedEmotions,     // 提前处理表情数据，方便后面使用 Trie 算法进行查找
+    _trie,                  // code -> obj 的查找树
+    _zhTrie,                // name -> obj 的查找树
+    _isSupportEmoji = util.doesSupportEmoji();  // 判断浏览器是否支持系统表情
+
+function Emotionify(opt){
+    var opt = opt || {};
+    this.addEmotions(opt.emotions || {} );
+}
+
+Emotionify.prototype ={
+
+    addEmotions:function(emotions){
+        _emotions = assign(_emotions, emotions || {});
+        _formattedEmotions = util.formatEmotions(_emotions);
+        _trie = util.buildTrie(_formattedEmotions);
+        _zhTrie = util.buildTrie(_formattedEmotions,true);
+    },
+
+    getEmotions:function(type){
+
+        var _this = this,
+            type = type || '';
+
+        if(!type){
+            return _emotions;
+        }else{
+            return _emotions[type]||{};
+        }
+    },
+
+    parse2Code:function(str){
+        var _this = this,
+            infos = _zhTrie.search(str),
+            emotionKeys = _formattedEmotions.zhKeys,
+            emotionMap = _formattedEmotions.zhMaps;
+        for(var i = infos.length-1; i >= 0 ; i--){
+            var info = infos[i],
+                pos = info[0],
+                keyIndex = info[1],
+                emotionKey = emotionKeys[keyIndex],
+                emotion = emotionMap[emotionKey];
+            str = util.splice(str,pos,emotionKey.length,emotion.code);
+        }
+        return str;
+    },
+
+    parse2Img:function(str){
+        str = util.utf16ToEntity(util.unescapeHTML(str));
+
+        var infos = _trie.search(str),
+            emotionKeys = _formattedEmotions.keys,
+            emotionMap = _formattedEmotions.maps;
+
+        for(var i = infos.length-1; i >= 0 ; i--){
+            var info = infos[i],
+                pos = info[0],
+                keyIndex = info[1];
+            var emotionKey = emotionKeys[keyIndex],
+                emotion = emotionMap[emotionKey],
+                replace = '<img src="' + emotion.pics['big'] + '" alt="' + emotion.name + '" title="' + emotion.name + '">';
+            // 判断是否是系统表情，以及是否支持该系统表情
+            if((/&#x1F[0-9]{3};/i).test(emotion['code'])){
+                if(_isSupportEmoji){
+                    continue;
+                }
+            }
+            str = util.splice(str,pos,emotionKey.length,replace);
+        }
+        return str;
+    }
+
+};
+
+// function emotionifyFactory(){
+//     return new emotionify({emotions:emotions});
+// }
+
+module.exports = Emotionify;
+
+},{"./emotions.js":3,"./util.js":6,"object-assign":1}],5:[function(require,module,exports){
+function Trie(){
+    this.words = 0;
+    this.empty = 1;
+    this.index = 0;
+    this.children = {};
+}
+
+Trie.prototype = {
+    insert: function(str, pos, idx){
+        if(str.length === 0) {
+            return;
+        }
+        var T = this;
+        var k;
+        var child;
+
+        if(pos === undefined) {
+            pos = 0;
+        }
+        if(pos === str.length) {
+            T.index = idx;
+            return;
+        }
+        k = str[pos];
+        if(T.children[k] === undefined){
+            T.children[k] = new Trie();
+            T.empty = 0;
+            T.children[k].words = this.words + 1;
+        }
+        child = T.children[k];
+        child.insert(str, pos + 1, idx);
+    },
+
+    build: function(arr){
+        var len = arr.length;
+        for(var i = 0; i < len; i++){
+            this.insert(arr[i], 0, i);
+        }
+    },
+
+    searchOne: function(str, pos){
+        if(pos === undefined){
+            pos = 0;
+        }
+        var result = {};
+        if(str.length === 0) return result;
+        var T = this;
+        var child;
+        var k;
+        result.arr = [];
+        k = str[pos];
+        child = T.children[k];
+        if(child !== undefined && pos < str.length){
+            return child.searchOne(str,  pos + 1);
+        }
+        if(child === undefined && T.empty === 0) return result;
+        if(T.empty == 1){
+            result.arr[0] = pos - T.words;
+            result.arr[1] = T.index;
+            result.words = T.words;
+            return result;
+        }
+        return result;
+    },
+
+    search: function(str){
+        if(this.empty == 1) return [];
+        var len = str.length;
+        var searchResult = [];
+        var tmp;
+        for(var i = 0; i < len - 1; i++){
+            tmp = this.searchOne(str, i);
+            if(typeof tmp.arr !== 'undefined' && tmp.arr.length > 0){
+                searchResult.push(tmp.arr);
+                i = i + tmp.words - 1;
+            }
+        }
+        return searchResult;
+    }
+};
+
+module.exports = Trie;
+},{}],6:[function(require,module,exports){
+'use strict';
+require('string.fromcodepoint');
+var Trie = require('./trie.js');
+
+// used to unescape HTML special chars in attributes
+var unescaper = {
+  '&amp;': '&',
+  '&lt;': '<',
+  '&gt;': '>',
+  '&#39;': "'",
+  '&quot;': '"'
+};
+
+function replacer(m){
+    return reunescaper[m];
+}
+
+function unescapeHTML(s){
+    var reunescapers = [
+        '&amp;',
+        '&lt;',
+        '&gt;',
+        '&#39;',
+        '&quot;'
+    ];
+
+    s = s.replace(new RegExp(reunescapers.join('|'), 'g'), function(m){
+        return unescaper[m]
+    });
+    return s;
+}
+
+function utf16ToEntity(s){
+    var ranges = [
+      '\ud83c[\udf00-\udfff]', // U+1F300 to U+1F3FF
+      '\ud83d[\udc00-\ude4f]', // U+1F400 to U+1F64F
+      '\ud83d[\ude80-\udeff]'  // U+1F680 to U+1F6FF
+    ];
+    s = s.replace(new RegExp(ranges.join('|'), 'g'), function(code){
+        return '&#x' + toCodePoint(code).toUpperCase() + ';';
+    });
+
+    return s;
+}
+
+
+function toCodePoint(unicodeSurrogates, sep) {
+    var
+      r = [],
+      c = 0,
+      p = 0,
+      i = 0;
+    while (i < unicodeSurrogates.length) {
+      c = unicodeSurrogates.charCodeAt(i++);
+      if (p) {
+        r.push((0x10000 + ((p - 0xD800) << 10) + (c - 0xDC00)).toString(16));
+        p = 0;
+      } else if (0xD800 <= c && c <= 0xDBFF) {
+        p = c;
+      } else {
+        r.push(c.toString(16));
+      }
+    }
+    return r.join(sep || '-');
+}
+
+function doesSupportEmoji() {
+    var context, smiley;
+    if (!document || !document.createElement || !document.createElement('canvas').getContext) return false;
+    context = document.createElement('canvas').getContext('2d');
+    if (typeof context.fillText != 'function') return false;
+    smiley = String.fromCodePoint(0x1F604); // :smile: String.fromCharCode(55357) + String.fromCharCode(56835)
+
+    context.textBaseline = "top";
+    context.font = "32px Arial";
+    context.fillText(smiley, 0, 0);
+    return context.getImageData(16, 16, 1, 1).data[0] !== 0;
+}
+
+function formatEmotions(emotions){
+    var keys = [],
+        zhKeys = [],
+        emotionMap = {},
+        emotionZhMap = {};
+    for(var type in emotions){
+        var ems = emotions[type] || {},
+            datas = ems['data'] ||[];
+        for(var i=0,len=datas.length;i<len;i++){
+            var emotion = datas[i];
+            if(!!emotion.code || !!emotion.name){
+                keys.push(emotion.code);
+                zhKeys.push(emotion.name);
+                emotionMap[emotion.code] = emotion;
+                emotionZhMap[emotion.name] = emotion;
+            }
+        }
+    }
+    return {
+        keys:keys,
+        zhKeys:zhKeys,
+        maps:emotionMap,
+        zhMaps:emotionZhMap
+    };
+}
+
+function buildTrie(emotions,isZh){
+    var trie = new Trie();
+    trie.build(!!isZh ? emotions.zhKeys : emotions.keys);
+    return trie;
+}
+
+function splice(str, index, count, add) {
+    return str.slice(0, index) + add + str.slice(index + count);
+}
+
+module.exports = {
+  doesSupportEmoji: doesSupportEmoji,
+  unescapeHTML: unescapeHTML,
+  utf16ToEntity: utf16ToEntity,
+  formatEmotions: formatEmotions,
+  buildTrie: buildTrie,
+  splice: splice
+};
+},{"./trie.js":5,"string.fromcodepoint":2}]},{},[4])(4)
+});

@@ -1,26 +1,23 @@
 'use strict';
-var emotions = require('./emotions.js');
+var _emotions = require('./emotions.js');//内置表情
 var assign = require('object-assign');
 var util = require('./util.js');
 
-var _emotions,              // 内置的表情数据
-    _formattedEmotions,     // 提前处理表情数据，方便后面使用 Trie 算法进行查找
+var _formattedEmotions,     // 提前处理表情数据，方便后面使用 Trie 算法进行查找
     _trie,                  // code -> obj 的查找树
     _zhTrie,                // name -> obj 的查找树
     _isSupportEmoji = util.doesSupportEmoji();  // 判断浏览器是否支持系统表情
 
-function emotionify(opt){
+function Emotionify(opt){
     var opt = opt || {};
-    _emotions = opt.emotions || {};
-    _formattedEmotions = util.formatEmotions(_emotions);
-    _trie = util.buildTrie(_formattedEmotions);
-    _zhTrie = util.buildTrie(_formattedEmotions,true);
+    this.addEmotions(opt.emotions || {} );
 }
 
-emotionify.prototype ={
+Emotionify.prototype ={
+
     addEmotions:function(emotions){
         _emotions = assign(_emotions, emotions || {});
-        _formattedEmotions = util.formatEmotions(emotions);
+        _formattedEmotions = util.formatEmotions(_emotions);
         _trie = util.buildTrie(_formattedEmotions);
         _zhTrie = util.buildTrie(_formattedEmotions,true);
     },
@@ -80,8 +77,8 @@ emotionify.prototype ={
 
 };
 
-function emotionifyFactory(){
-    return new emotionify({emotions:emotions});
-}
+// function emotionifyFactory(){
+//     return new emotionify({emotions:emotions});
+// }
 
-module.exports = emotionifyFactory;
+module.exports = Emotionify;

@@ -1,4 +1,4 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.emotionifyFactory = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Emotionify = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /* eslint-disable no-unused-vars */
 'use strict';
 var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -652,81 +652,30 @@ module.exports ={
         ]
     }
 };
+
 },{}],4:[function(require,module,exports){
 'use strict';
-require('string.fromcodepoint');
-var Trie = require('./trie.js');
-var emotions = require('./emotions.js');
+var _emotions = require('./emotions.js');//内置表情
 var assign = require('object-assign');
+var util = require('./util.js');
 
-// used to unescape HTML special chars in attributes
-var unescaper = {
-  '&amp;': '&',
-  '&lt;': '<',
-  '&gt;': '>',
-  '&#39;': "'",
-  '&quot;': '"'
-};
+var _formattedEmotions,     // 提前处理表情数据，方便后面使用 Trie 算法进行查找
+    _trie,                  // code -> obj 的查找树
+    _zhTrie,                // name -> obj 的查找树
+    _isSupportEmoji = util.doesSupportEmoji();  // 判断浏览器是否支持系统表情
 
-function replacer(m){
-    return reunescaper[m];
-}
-
-function unescapeHTML(s){
-    var reunescapers = [
-        '&amp;',
-        '&lt;',
-        '&gt;',
-        '&#39;',
-        '&quot;'
-    ];
-
-    s = s.replace(new RegExp(reunescapers.join('|'), 'g'), function(m){
-        return unescaper[m]
-    });
-    return s;
-}
-
-function utf16ToEntity(s){
-    var ranges = [
-      '\ud83c[\udf00-\udfff]', // U+1F300 to U+1F3FF
-      '\ud83d[\udc00-\ude4f]', // U+1F400 to U+1F64F
-      '\ud83d[\ude80-\udeff]'  // U+1F680 to U+1F6FF
-    ];
-    s = s.replace(new RegExp(ranges.join('|'), 'g'), function(code){
-        return '&#x' + toCodePoint(code).toUpperCase() + ';';
-    });
-
-    return s;
-}
-
-function doesSupportEmoji() {
-    var context, smiley;
-    if (!document || !document.createElement || !document.createElement('canvas').getContext) return false;
-    context = document.createElement('canvas').getContext('2d');
-    if (typeof context.fillText != 'function') return false;
-    smiley = String.fromCodePoint(0x1F604); // :smile: String.fromCharCode(55357) + String.fromCharCode(56835)
-
-    context.textBaseline = "top";
-    context.font = "32px Arial";
-    context.fillText(smiley, 0, 0);
-    return context.getImageData(16, 16, 1, 1).data[0] !== 0;
-}
-
-function emotionify(opt){
+function Emotionify(opt){
     var opt = opt || {};
-    this.emotions = opt.emotions || {};
-    this._formattedEmotions = formatEmotions(emotions);
-    this._trie = buildTrie(this._formattedEmotions);
-    this._zhTrie = buildTrie(this._formattedEmotions,true);
+    this.addEmotions(opt.emotions || {} );
 }
 
-emotionify.prototype ={
+Emotionify.prototype ={
+
     addEmotions:function(emotions){
-        this.emotions = assign(this.emotions, emotions || {});
-        this._formattedEmotions = formatEmotions(emotions);
-        this._trie = buildTrie(this._formattedEmotions);
-        this._zhTrie = buildTrie(this._formattedEmotions,true);
+        _emotions = assign(_emotions, emotions || {});
+        _formattedEmotions = util.formatEmotions(_emotions);
+        _trie = util.buildTrie(_formattedEmotions);
+        _zhTrie = util.buildTrie(_formattedEmotions,true);
     },
 
     getEmotions:function(type){
@@ -735,35 +684,34 @@ emotionify.prototype ={
             type = type || '';
 
         if(!type){
-            return _this.emotions;
+            return _emotions;
         }else{
-            return _this.emotions[type]||{};
+            return _emotions[type]||{};
         }
     },
 
     parse2Code:function(str){
         var _this = this,
-            infos = _this._zhTrie.search(str),
-            emotionKeys = _this._formattedEmotions.zhKeys,
-            emotionMap = _this._formattedEmotions.zhMaps;
+            infos = _zhTrie.search(str),
+            emotionKeys = _formattedEmotions.zhKeys,
+            emotionMap = _formattedEmotions.zhMaps;
         for(var i = infos.length-1; i >= 0 ; i--){
             var info = infos[i],
                 pos = info[0],
                 keyIndex = info[1],
                 emotionKey = emotionKeys[keyIndex],
                 emotion = emotionMap[emotionKey];
-            str = splice(str,pos,emotionKey.length,emotion.code);
+            str = util.splice(str,pos,emotionKey.length,emotion.code);
         }
         return str;
     },
 
     parse2Img:function(str){
-        str = utf16ToEntity(unescapeHTML(str));
+        str = util.utf16ToEntity(util.unescapeHTML(str));
 
-        var _this = this,
-            infos = _this._trie.search(str),
-            emotionKeys = _this._formattedEmotions.keys,
-            emotionMap = _this._formattedEmotions.maps;
+        var infos = _trie.search(str),
+            emotionKeys = _formattedEmotions.keys,
+            emotionMap = _formattedEmotions.maps;
 
         for(var i = infos.length-1; i >= 0 ; i--){
             var info = infos[i],
@@ -774,79 +722,24 @@ emotionify.prototype ={
                 replace = '<img src="' + emotion.pics['big'] + '" alt="' + emotion.name + '" title="' + emotion.name + '">';
             // 判断是否是系统表情，以及是否支持该系统表情
             if((/&#x1F[0-9]{3};/i).test(emotion['code'])){
-                if(doesSupportEmoji()){
+                if(_isSupportEmoji){
                     continue;
                 }
             }
-            str = splice(str,pos,emotionKey.length,replace);
+            str = util.splice(str,pos,emotionKey.length,replace);
         }
         return str;
     }
 
 };
 
-function buildTrie(emotions,isZh){
-    var trie = new Trie();
-    trie.build(!!isZh ? emotions.zhKeys : emotions.keys);
-    return trie;
-}
+// function emotionifyFactory(){
+//     return new emotionify({emotions:emotions});
+// }
 
-function splice(str, index, count, add) {
-    return str.slice(0, index) + add + str.slice(index + count);
-}
+module.exports = Emotionify;
 
-function formatEmotions(emotions){
-    var keys = [],
-        zhKeys = [],
-        emotionMap = {},
-        emotionZhMap = {};
-    for(var type in emotions){
-        var ems = emotions[type] || {},
-            datas = ems['data'] ||[];
-        for(var i=0,len=datas.length;i<len;i++){
-            var emotion = datas[i];
-            if(!!emotion.code || !!emotion.name){
-                keys.push(emotion.code);
-                zhKeys.push(emotion.name);
-                emotionMap[emotion.code] = emotion;
-                emotionZhMap[emotion.name] = emotion;
-            }
-        }
-    }
-    return {
-        keys:keys,
-        zhKeys:zhKeys,
-        maps:emotionMap,
-        zhMaps:emotionZhMap
-    };
-}
-
-function toCodePoint(unicodeSurrogates, sep) {
-    var
-      r = [],
-      c = 0,
-      p = 0,
-      i = 0;
-    while (i < unicodeSurrogates.length) {
-      c = unicodeSurrogates.charCodeAt(i++);
-      if (p) {
-        r.push((0x10000 + ((p - 0xD800) << 10) + (c - 0xDC00)).toString(16));
-        p = 0;
-      } else if (0xD800 <= c && c <= 0xDBFF) {
-        p = c;
-      } else {
-        r.push(c.toString(16));
-      }
-    }
-    return r.join(sep || '-');
-}
-
-function emotionifyFactory(){
-    return new emotionify({emotions:emotions});
-}
-
-module.exports = emotionifyFactory;
-},{"./emotions.js":3,"./trie.js":5,"object-assign":1,"string.fromcodepoint":2}],5:[function(require,module,exports){
+},{"./emotions.js":3,"./util.js":6,"object-assign":1}],5:[function(require,module,exports){
 function Trie(){
     this.words = 0;
     this.empty = 1;
@@ -929,5 +822,129 @@ Trie.prototype = {
 };
 
 module.exports = Trie;
-},{}]},{},[4])(4)
+},{}],6:[function(require,module,exports){
+'use strict';
+require('string.fromcodepoint');
+var Trie = require('./trie.js');
+
+// used to unescape HTML special chars in attributes
+var unescaper = {
+  '&amp;': '&',
+  '&lt;': '<',
+  '&gt;': '>',
+  '&#39;': "'",
+  '&quot;': '"'
+};
+
+function replacer(m){
+    return reunescaper[m];
+}
+
+function unescapeHTML(s){
+    var reunescapers = [
+        '&amp;',
+        '&lt;',
+        '&gt;',
+        '&#39;',
+        '&quot;'
+    ];
+
+    s = s.replace(new RegExp(reunescapers.join('|'), 'g'), function(m){
+        return unescaper[m]
+    });
+    return s;
+}
+
+function utf16ToEntity(s){
+    var ranges = [
+      '\ud83c[\udf00-\udfff]', // U+1F300 to U+1F3FF
+      '\ud83d[\udc00-\ude4f]', // U+1F400 to U+1F64F
+      '\ud83d[\ude80-\udeff]'  // U+1F680 to U+1F6FF
+    ];
+    s = s.replace(new RegExp(ranges.join('|'), 'g'), function(code){
+        return '&#x' + toCodePoint(code).toUpperCase() + ';';
+    });
+
+    return s;
+}
+
+
+function toCodePoint(unicodeSurrogates, sep) {
+    var
+      r = [],
+      c = 0,
+      p = 0,
+      i = 0;
+    while (i < unicodeSurrogates.length) {
+      c = unicodeSurrogates.charCodeAt(i++);
+      if (p) {
+        r.push((0x10000 + ((p - 0xD800) << 10) + (c - 0xDC00)).toString(16));
+        p = 0;
+      } else if (0xD800 <= c && c <= 0xDBFF) {
+        p = c;
+      } else {
+        r.push(c.toString(16));
+      }
+    }
+    return r.join(sep || '-');
+}
+
+function doesSupportEmoji() {
+    var context, smiley;
+    if (!document || !document.createElement || !document.createElement('canvas').getContext) return false;
+    context = document.createElement('canvas').getContext('2d');
+    if (typeof context.fillText != 'function') return false;
+    smiley = String.fromCodePoint(0x1F604); // :smile: String.fromCharCode(55357) + String.fromCharCode(56835)
+
+    context.textBaseline = "top";
+    context.font = "32px Arial";
+    context.fillText(smiley, 0, 0);
+    return context.getImageData(16, 16, 1, 1).data[0] !== 0;
+}
+
+function formatEmotions(emotions){
+    var keys = [],
+        zhKeys = [],
+        emotionMap = {},
+        emotionZhMap = {};
+    for(var type in emotions){
+        var ems = emotions[type] || {},
+            datas = ems['data'] ||[];
+        for(var i=0,len=datas.length;i<len;i++){
+            var emotion = datas[i];
+            if(!!emotion.code || !!emotion.name){
+                keys.push(emotion.code);
+                zhKeys.push(emotion.name);
+                emotionMap[emotion.code] = emotion;
+                emotionZhMap[emotion.name] = emotion;
+            }
+        }
+    }
+    return {
+        keys:keys,
+        zhKeys:zhKeys,
+        maps:emotionMap,
+        zhMaps:emotionZhMap
+    };
+}
+
+function buildTrie(emotions,isZh){
+    var trie = new Trie();
+    trie.build(!!isZh ? emotions.zhKeys : emotions.keys);
+    return trie;
+}
+
+function splice(str, index, count, add) {
+    return str.slice(0, index) + add + str.slice(index + count);
+}
+
+module.exports = {
+  doesSupportEmoji: doesSupportEmoji,
+  unescapeHTML: unescapeHTML,
+  utf16ToEntity: utf16ToEntity,
+  formatEmotions: formatEmotions,
+  buildTrie: buildTrie,
+  splice: splice
+};
+},{"./trie.js":5,"string.fromcodepoint":2}]},{},[4])(4)
 });
