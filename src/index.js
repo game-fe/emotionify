@@ -65,7 +65,7 @@ Emotion.prototype ={
     },
 
     parse2Img:function(str){
-        var infos = _trie.search(str),
+        var infos = _utf16Trie.search(str),
             emotionUtf16Keys = _formattedUtf16Emotions.keys,
             emotionUtf16Maps = _formattedUtf16Emotions.maps;
 
@@ -86,7 +86,7 @@ Emotion.prototype ={
     },
 
     filterCode: function(str){
-        var infos = _trie.search(str),
+        var infos = _utf16Trie.search(str),
             emotionUtf16Keys = _formattedUtf16Emotions.keys,
             emotionUtf16Maps = _formattedUtf16Emotions.maps;
 

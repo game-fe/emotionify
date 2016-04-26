@@ -731,7 +731,7 @@ Emotion.prototype ={
     },
 
     parse2Img:function(str){
-        var infos = _trie.search(str),
+        var infos = _utf16Trie.search(str),
             emotionUtf16Keys = _formattedUtf16Emotions.keys,
             emotionUtf16Maps = _formattedUtf16Emotions.maps;
 
@@ -752,7 +752,7 @@ Emotion.prototype ={
     },
 
     filterCode: function(str){
-        var infos = _trie.search(str),
+        var infos = _utf16Trie.search(str),
             emotionUtf16Keys = _formattedUtf16Emotions.keys,
             emotionUtf16Maps = _formattedUtf16Emotions.maps;
 
@@ -863,11 +863,17 @@ require('string.fromcodepoint');
 var Trie = require('./trie.js');
 
 function isSystem(code){
-    return new RegExp('&#x1F[0-9]{3};', 'i').test(code);
+   var ranges = [
+      '\\ud83c[\\udf00-\\udfff]', // U+1F300 to U+1F3FF   
+      '\\ud83d[\udc00-\ude4f]', // U+1F400 to U+1F64F    
+      '\\ud83d[\\ude80-\\udeff]'  // U+1F680 to U+1F6FF
+    ];
+
+    return new RegExp(ranges.join('|'), 'g').test(code) || new RegExp('&#x1F[0-9]{3};', 'i').test(code);
 }
 
 function entityToUtf16(entity){
-  return entity.replace(/&#x(.*;)/g, function(match, group){
+  return entity.replace(/&#x(1F[0-9]{3};)/g, function(match, group){
     return fromCodePoint(group);
   });
 }
@@ -937,7 +943,7 @@ function formatUtf16Emotions(emotions){
             if(!!emotion.code || !!emotion.name){
                 keys.push(entityToUtf16(emotion.code));
                 zhKeys.push(emotion.name);
-                emotionMap[emotion.code] = emotion;
+                emotionMap[entityToUtf16(emotion.code)] = emotion;
                 emotionZhMap[emotion.name] = emotion;
             }
         }

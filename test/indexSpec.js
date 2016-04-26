@@ -12,9 +12,9 @@ describe('method parse2Img', function(){
 describe('method parse2Code', function(){
 	it('parse2Code() should parse a string contains code to a string contains image', function(){
 		// parse name to code
-		var parsedStr = emotionify.parse2Code('[宝宝方了][微笑][露齿而笑]');
+		var parsedStr = emotionify.parse2Code('[宝宝方了][微笑][露齿而笑]😁');
 
-		var expectedStr = '#$face_16$#/::)😁';
+		var expectedStr = '#$face_16$#/::)😁😁';
 
 		expect(parsedStr).toEqual(expectedStr);
 	});
