@@ -671,7 +671,9 @@ var util = require('./util.js');
 
 var _emotions,
     _formattedEmotions,     // 提前处理表情数据，方便后面使用 Trie 算法进行查找
+    _formattedUtf16Emotions,
     _trie,                  // code -> obj 的查找树
+    _utf16Trie,
     _zhTrie,                // name -> obj 的查找树
     _isSupportEmoji = util.doesSupportEmoji();  // 判断浏览器是否支持系统表情
 
@@ -679,7 +681,9 @@ function Emotion(opt){
     var opt = opt || {};
     _emotions = opt.emotions;
     _formattedEmotions = util.formatEmotions(_emotions);
+    _formattedUtf16Emotions = util.formatUtf16Emotions(_emotions);
     _trie = util.buildTrie(_formattedEmotions);
+    _utf16Trie = util.buildTrie(_formattedUtf16Emotions);
     _zhTrie = util.buildTrie(_formattedEmotions,true);
 }
 
@@ -688,7 +692,9 @@ Emotion.prototype ={
     addEmotions:function(emotions){
         _emotions = assign(_emotions, emotions || {});
         _formattedEmotions = util.formatEmotions(_emotions);
+        _formattedUtf16Emotions = util.formatUtf16Emotions(_emotions);
         _trie = util.buildTrie(_formattedEmotions);
+        _utf16Trie = util.buildTrie(_formattedUtf16Emotions);
         _zhTrie = util.buildTrie(_formattedEmotions,true);
     },
 
@@ -708,15 +714,15 @@ Emotion.prototype ={
         var _this = this,
             infos = _zhTrie.search(str),
             emotionKeys = _formattedEmotions.zhKeys,
-            emotionMap = _formattedEmotions.zhMaps;
+            emotionMaps = _formattedEmotions.zhMaps;
         for(var i = infos.length-1; i >= 0 ; i--){
             var info = infos[i],
                 pos = info[0],
                 keyIndex = info[1],
                 emotionKey = emotionKeys[keyIndex],
-                emotion = emotionMap[emotionKey];
+                emotion = emotionMaps[emotionKey];
             // 判断是否是通过实体的方式表示的 emoji 表情
-            if((/&#x1F[0-9]{3};/i).test(emotion.code)){
+            if(util.isSystem(emotion.code)){
                 emotion.code = util.entityToUtf16(emotion.code);
             }
             str = util.splice(str,pos,emotionKey.length,emotion.code);
@@ -726,15 +732,15 @@ Emotion.prototype ={
 
     parse2Img:function(str){
         var infos = _trie.search(str),
-            emotionKeys = _formattedEmotions.keys,
-            emotionMap = _formattedEmotions.maps;
+            emotionUtf16Keys = _formattedUtf16Emotions.keys,
+            emotionUtf16Maps = _formattedUtf16Emotions.maps;
 
         for(var i = infos.length-1; i >= 0 ; i--){
             var info = infos[i],
                 pos = info[0],
                 keyIndex = info[1];
-            var emotionKey = emotionKeys[keyIndex],
-                emotion = emotionMap[emotionKey],
+            var emotionKey = emotionUtf16Keys[keyIndex],
+                emotion = emotionUtf16Maps[emotionKey],
                 replace = '<img src="' + emotion.pics['big'] + '" alt="' + emotion.name + '" title="' + emotion.name + '">';
             // 判断是否是系统表情，以及是否支持该系统表情
             if(_isSupportEmoji && util.isSystem(emotion.code)){
@@ -746,23 +752,21 @@ Emotion.prototype ={
     },
 
     filterCode: function(str){
-
         var infos = _trie.search(str),
-            emotionKeys = _formattedEmotions.keys,
-            emotionMap = _formattedEmotions.maps;
+            emotionUtf16Keys = _formattedUtf16Emotions.keys,
+            emotionUtf16Maps = _formattedUtf16Emotions.maps;
 
         for(var i = infos.length-1; i >= 0 ; i--){
             var info = infos[i],
                 pos = info[0],
                 keyIndex = info[1];
-            var emotionKey = emotionKeys[keyIndex],
-                emotion = emotionMap[emotionKey],
-                replace = '';
+            var emotionKey = emotionUtf16Keys[keyIndex],
+                emotion = emotionUtf16Maps[emotionKey];
             // 判断是否是系统表情，以及是否支持该系统表情
             if(_isSupportEmoji && util.isSystem(emotion.code)){
                 continue;
             }
-            str = util.splice(str,pos,emotionKey.length,replace);
+            str = util.splice(str,pos,emotionKey.length,'');
         }
         return str;
     }
@@ -858,42 +862,8 @@ module.exports = Trie;
 require('string.fromcodepoint');
 var Trie = require('./trie.js');
 
-// used to unescape HTML special chars in attributes
-var unescaper = {
-  '&amp;': '&',
-  '&lt;': '<',
-  '&gt;': '>',
-  '&#39;': "'",
-  '&quot;': '"'
-};
-
-function replacer(m){
-    return reunescaper[m];
-}
-
-function unescapeHTML(s){
-    var reunescapers = [
-        '&amp;',
-        '&lt;',
-        '&gt;',
-        '&#39;',
-        '&quot;'
-    ];
-
-    s = s.replace(new RegExp(reunescapers.join('|'), 'g'), function(m){
-        return unescaper[m]
-    });
-    return s;
-}
-
 function isSystem(code){
-    var ranges = [
-      '\\ud83c[\\udf00-\\udfff]', // U+1F300 to U+1F3FF
-      '\\ud83d[\\udc00-\\ude4f]', // U+1F400 to U+1F64F
-      '\\ud83d[\\ude80-\\udeff]'  // U+1F680 to U+1F6FF
-    ];
-
-    return (new RegExp(ranges.join('|'), 'i').test(code) || new RegExp('&#x1F[0-9]{3};', 'i').test(code));
+    return new RegExp('&#x1F[0-9]{3};', 'i').test(code);
 }
 
 function entityToUtf16(entity){
@@ -954,6 +924,32 @@ function formatEmotions(emotions){
     };
 }
 
+function formatUtf16Emotions(emotions){
+    var keys = [],
+        zhKeys = [],
+        emotionMap = {},
+        emotionZhMap = {};
+    for(var type in emotions){
+        var ems = emotions[type] || {},
+            datas = ems['data'] ||[];
+        for(var i=0,len=datas.length;i<len;i++){
+            var emotion = datas[i];
+            if(!!emotion.code || !!emotion.name){
+                keys.push(entityToUtf16(emotion.code));
+                zhKeys.push(emotion.name);
+                emotionMap[emotion.code] = emotion;
+                emotionZhMap[emotion.name] = emotion;
+            }
+        }
+    }
+    return {
+        keys:keys,
+        zhKeys:zhKeys,
+        maps:emotionMap,
+        zhMaps:emotionZhMap
+    };
+}
+
 function buildTrie(emotions,isZh){
     var trie = new Trie();
     trie.build(!!isZh ? emotions.zhKeys : emotions.keys);
@@ -968,6 +964,7 @@ module.exports = {
   doesSupportEmoji: doesSupportEmoji,
   entityToUtf16: entityToUtf16,
   formatEmotions: formatEmotions,
+  formatUtf16Emotions: formatUtf16Emotions,
   buildTrie: buildTrie,
   splice: splice,
   isSystem: isSystem

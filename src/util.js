@@ -2,42 +2,8 @@
 require('string.fromcodepoint');
 var Trie = require('./trie.js');
 
-// used to unescape HTML special chars in attributes
-var unescaper = {
-  '&amp;': '&',
-  '&lt;': '<',
-  '&gt;': '>',
-  '&#39;': "'",
-  '&quot;': '"'
-};
-
-function replacer(m){
-    return reunescaper[m];
-}
-
-function unescapeHTML(s){
-    var reunescapers = [
-        '&amp;',
-        '&lt;',
-        '&gt;',
-        '&#39;',
-        '&quot;'
-    ];
-
-    s = s.replace(new RegExp(reunescapers.join('|'), 'g'), function(m){
-        return unescaper[m]
-    });
-    return s;
-}
-
 function isSystem(code){
-    var ranges = [
-      '\\ud83c[\\udf00-\\udfff]', // U+1F300 to U+1F3FF
-      '\\ud83d[\\udc00-\\ude4f]', // U+1F400 to U+1F64F
-      '\\ud83d[\\ude80-\\udeff]'  // U+1F680 to U+1F6FF
-    ];
-
-    return (new RegExp(ranges.join('|'), 'i').test(code) || new RegExp('&#x1F[0-9]{3};', 'i').test(code));
+    return new RegExp('&#x1F[0-9]{3};', 'i').test(code);
 }
 
 function entityToUtf16(entity){
@@ -98,6 +64,32 @@ function formatEmotions(emotions){
     };
 }
 
+function formatUtf16Emotions(emotions){
+    var keys = [],
+        zhKeys = [],
+        emotionMap = {},
+        emotionZhMap = {};
+    for(var type in emotions){
+        var ems = emotions[type] || {},
+            datas = ems['data'] ||[];
+        for(var i=0,len=datas.length;i<len;i++){
+            var emotion = datas[i];
+            if(!!emotion.code || !!emotion.name){
+                keys.push(entityToUtf16(emotion.code));
+                zhKeys.push(emotion.name);
+                emotionMap[emotion.code] = emotion;
+                emotionZhMap[emotion.name] = emotion;
+            }
+        }
+    }
+    return {
+        keys:keys,
+        zhKeys:zhKeys,
+        maps:emotionMap,
+        zhMaps:emotionZhMap
+    };
+}
+
 function buildTrie(emotions,isZh){
     var trie = new Trie();
     trie.build(!!isZh ? emotions.zhKeys : emotions.keys);
@@ -112,6 +104,7 @@ module.exports = {
   doesSupportEmoji: doesSupportEmoji,
   entityToUtf16: entityToUtf16,
   formatEmotions: formatEmotions,
+  formatUtf16Emotions: formatUtf16Emotions,
   buildTrie: buildTrie,
   splice: splice,
   isSystem: isSystem
