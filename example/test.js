@@ -1,6 +1,6 @@
 var emotionify = require('../dist/emotionifyFactory.js');
 // parse code to img
-var parsedImg = emotionify.parse2Img("#$face_01$#/::)&#x1F600;");
+var parsedImg = emotionify.parse2Img("#$face_16$#/::)😁");
 console.log(parsedImg);
 
 // parse name to code

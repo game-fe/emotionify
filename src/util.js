@@ -30,38 +30,33 @@ function unescapeHTML(s){
     return s;
 }
 
-function utf16ToEntity(s){
+function isSystem(code){
     var ranges = [
       '\\ud83c[\\udf00-\\udfff]', // U+1F300 to U+1F3FF
       '\\ud83d[\\udc00-\\ude4f]', // U+1F400 to U+1F64F
       '\\ud83d[\\ude80-\\udeff]'  // U+1F680 to U+1F6FF
     ];
-    s = s.replace(new RegExp(ranges.join('|'), 'g'), function(code){
-        return '&#x' + toCodePoint(code).toUpperCase() + ';';
-    });
 
-    return s;
+    return (new RegExp(ranges.join('|'), 'i').test(code) || new RegExp('&#x1F[0-9]{3};', 'i').test(code));
 }
 
+function entityToUtf16(entity){
+  return entity.replace(/&#x(.*;)/g, function(match, group){
+    return fromCodePoint(group);
+  });
+}
 
-function toCodePoint(unicodeSurrogates, sep) {
-    var
-      r = [],
-      c = 0,
-      p = 0,
-      i = 0;
-    while (i < unicodeSurrogates.length) {
-      c = unicodeSurrogates.charCodeAt(i++);
-      if (p) {
-        r.push((0x10000 + ((p - 0xD800) << 10) + (c - 0xDC00)).toString(16));
-        p = 0;
-      } else if (0xD800 <= c && c <= 0xDBFF) {
-        p = c;
-      } else {
-        r.push(c.toString(16));
-      }
-    }
-    return r.join(sep || '-');
+function fromCodePoint(codepoint) {
+  var code = typeof codepoint === 'string' ?
+        parseInt(codepoint, 16) : codepoint;
+  if (code < 0x10000) {
+    return fromCharCode(code);
+  }
+  code -= 0x10000;
+  return String.fromCharCode(
+    0xD800 + (code >> 10),
+    0xDC00 + (code & 0x3FF)
+  );
 }
 
 function doesSupportEmoji() {
@@ -115,9 +110,9 @@ function splice(str, index, count, add) {
 
 module.exports = {
   doesSupportEmoji: doesSupportEmoji,
-  unescapeHTML: unescapeHTML,
-  utf16ToEntity: utf16ToEntity,
+  entityToUtf16: entityToUtf16,
   formatEmotions: formatEmotions,
   buildTrie: buildTrie,
-  splice: splice
+  splice: splice,
+  isSystem: isSystem
 };

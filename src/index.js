@@ -49,14 +49,16 @@ Emotion.prototype ={
                 keyIndex = info[1],
                 emotionKey = emotionKeys[keyIndex],
                 emotion = emotionMap[emotionKey];
+            // 判断是否是通过实体的方式表示的 emoji 表情
+            if((/&#x1F[0-9]{3};/i).test(emotion.code)){
+                emotion.code = util.entityToUtf16(emotion.code);
+            }
             str = util.splice(str,pos,emotionKey.length,emotion.code);
         }
         return str;
     },
 
     parse2Img:function(str){
-        str = util.utf16ToEntity(util.unescapeHTML(str));
-
         var infos = _trie.search(str),
             emotionKeys = _formattedEmotions.keys,
             emotionMap = _formattedEmotions.maps;
@@ -69,10 +71,8 @@ Emotion.prototype ={
                 emotion = emotionMap[emotionKey],
                 replace = '<img src="' + emotion.pics['big'] + '" alt="' + emotion.name + '" title="' + emotion.name + '">';
             // 判断是否是系统表情，以及是否支持该系统表情
-            if((/&#x1F[0-9]{3};/i).test(emotion['code'])){
-                if(_isSupportEmoji){
-                    continue;
-                }
+            if(_isSupportEmoji && util.isSystem(emotion.code)){
+                continue;
             }
             str = util.splice(str,pos,emotionKey.length,replace);
         }
@@ -80,7 +80,6 @@ Emotion.prototype ={
     },
 
     filterCode: function(str){
-        str = util.utf16ToEntity(util.unescapeHTML(str));
 
         var infos = _trie.search(str),
             emotionKeys = _formattedEmotions.keys,
@@ -94,10 +93,8 @@ Emotion.prototype ={
                 emotion = emotionMap[emotionKey],
                 replace = '';
             // 判断是否是系统表情，以及是否支持该系统表情
-            if((/&#x1F[0-9]{3};/i).test(emotion['code'])){
-                if(_isSupportEmoji){
-                    continue;
-                }
+            if(_isSupportEmoji && util.isSystem(emotion.code)){
+                continue;
             }
             str = util.splice(str,pos,emotionKey.length,replace);
         }
