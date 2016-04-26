@@ -77,6 +77,31 @@ Emotion.prototype ={
             str = util.splice(str,pos,emotionKey.length,replace);
         }
         return str;
+    },
+
+    filterCode: function(str){
+        str = util.utf16ToEntity(util.unescapeHTML(str));
+
+        var infos = _trie.search(str),
+            emotionKeys = _formattedEmotions.keys,
+            emotionMap = _formattedEmotions.maps;
+
+        for(var i = infos.length-1; i >= 0 ; i--){
+            var info = infos[i],
+                pos = info[0],
+                keyIndex = info[1];
+            var emotionKey = emotionKeys[keyIndex],
+                emotion = emotionMap[emotionKey],
+                replace = '';
+            // 判断是否是系统表情，以及是否支持该系统表情
+            if((/&#x1F[0-9]{3};/i).test(emotion['code'])){
+                if(_isSupportEmoji){
+                    continue;
+                }
+            }
+            str = util.splice(str,pos,emotionKey.length,replace);
+        }
+        return str;
     }
 };
 
