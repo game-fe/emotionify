@@ -2,10 +2,11 @@
 require('string.fromcodepoint');
 var Trie = require('./trie.js');
 
+// 能够识别通过实体和 utf16 编码的系统表情
 function isSystem(code){
    var ranges = [
       '\\ud83c[\\udf00-\\udfff]', // U+1F300 to U+1F3FF   
-      '\\ud83d[\udc00-\ude4f]', // U+1F400 to U+1F64F    
+      '\\ud83d[\\udc00-\\ude4f]', // U+1F400 to U+1F64F    
       '\\ud83d[\\ude80-\\udeff]'  // U+1F680 to U+1F6FF
     ];
 
@@ -22,7 +23,7 @@ function fromCodePoint(codepoint) {
   var code = typeof codepoint === 'string' ?
         parseInt(codepoint, 16) : codepoint;
   if (code < 0x10000) {
-    return fromCharCode(code);
+    return String.fromCharCode(code);
   }
   code -= 0x10000;
   return String.fromCharCode(

@@ -1,5 +1,7 @@
 var gulp = require('gulp'),
     rename = require('gulp-rename'),
+    uglify = require('gulp-uglify'),
+    buffer = require('gulp-buffer'),
     source = require('vinyl-source-stream'),
     browserSync = require('browser-sync').create(),
     browserify = require('browserify');
@@ -36,6 +38,8 @@ function bundle(){
         console.log(err);
     })
     .pipe(source('emotionify.js'))
+    .pipe(buffer())
+    .pipe(uglify())
     .pipe(gulp.dest('./dist'))
     .pipe(gulp.dest('./example'));
 }
