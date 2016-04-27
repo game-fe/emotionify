@@ -1,6 +1,6 @@
 {
   "name": "emotionify",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "common emotion service ",
   "main": "./src/index.js",
   "scripts": {
