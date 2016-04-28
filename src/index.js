@@ -82,6 +82,9 @@ Emotion.prototype ={
             }
             str = util.splice(str,pos,emotionKey.length,replace);
         }
+        if(!_isSupportEmoji){
+            str = str.replace(util.reEmoji, '');
+        }
         return str;
     },
 

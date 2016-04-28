@@ -3,6 +3,28 @@ module.exports = {
     data: [
         {
             pics: {
+                big: 'http://p9.qhimg.com/d/inn/cf4ad1a4/1f1/1f1e6.png',
+                medium: 'http://p9.qhimg.com/d/inn/cf4ad1a4/1f1/1f1e6.png',
+                small: 'http://p9.qhimg.com/d/inn/cf4ad1a4/1f1/1f1e6.png'
+            },
+            name: '',
+            code: '&#x1F1E6;'
+        },
+
+        {
+            pics: {
+                big: 'http://p9.qhimg.com/d/inn/cf4ad1a4/1f1/1f1e7.png',
+                medium: 'http://p9.qhimg.com/d/inn/cf4ad1a4/1f1/1f1e7.png',
+                small: 'http://p9.qhimg.com/d/inn/cf4ad1a4/1f1/1f1e7.png'
+            },
+            name: '',
+            code: '&#x1F1E7;'
+        },
+        
+
+
+        {
+            pics: {
                 big: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f600.png',
                 medium: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f600.png',
                 small: 'http://p5.qhimg.com/d/inn/fa34a89c/emoji/1f600.png'
